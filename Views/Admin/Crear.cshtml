@@ -1,0 +1,315 @@
+@model TiendaNaval.Models.Producto
+
+@{
+    ViewData["Title"] = "Agregar producto";
+}
+
+<section class="admin-form-page">
+
+    <div class="admin-form-header">
+
+        <p class="admin-eyebrow">
+            ADMINISTRACIÓN
+        </p>
+
+        <h1>Agregar producto</h1>
+
+        <a asp-action="Index"
+           class="admin-back">
+            ← Volver a productos
+        </a>
+
+    </div>
+
+
+    <form asp-action="Crear"
+          method="post"
+          enctype="multipart/form-data"
+          class="admin-form">
+
+        <!-- NOMBRE -->
+        <div class="admin-field full">
+            <label>Nombre del producto</label>
+
+            <input asp-for="Nombre"
+                   placeholder="Ej. Gorra Naval" />
+        </div>
+
+
+        <!-- DESCRIPCIÓN -->
+        <div class="admin-field full">
+            <label>Descripción</label>
+
+            <textarea asp-for="Descripcion"
+                      rows="5"
+                      placeholder="Descripción del producto"></textarea>
+        </div>
+
+
+        <!-- PRECIO -->
+        <div class="admin-field">
+            <label>Precio</label>
+
+            <input asp-for="Precio"
+                   type="number"
+                   step="0.01"
+                   placeholder="0" />
+        </div>
+
+
+        <!-- STOCK -->
+        <div class="admin-field">
+            <label>Stock</label>
+
+            <input asp-for="Stock"
+                   type="number"
+                   placeholder="0" />
+        </div>
+
+
+        <!-- CATEGORÍA -->
+        <div class="admin-field full">
+
+            <label>Categoría</label>
+
+            <select asp-for="CategoriaId">
+
+                @foreach (var categoria in
+                    (List<TiendaNaval.Models.Categoria>)ViewBag.Categorias)
+                {
+                    <option value="@categoria.Id">
+                        @categoria.Nombre
+                    </option>
+                }
+
+            </select>
+
+        </div>
+
+
+        <!-- COLECCIÓN -->
+        <div class="admin-field full">
+
+            <label>Colección</label>
+
+            <select asp-for="TipoColeccion"
+                    required>
+
+                <option value="">
+                    Seleccionar colección
+                </option>
+
+                <option value="ESSA">
+                    Colección ESSA
+                </option>
+
+                <option value="Armada">
+                    Colección Armada
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- IMÁGENES -->
+        <div class="admin-field full">
+
+            <label>Imágenes del producto</label>
+
+            <input type="file"
+                   id="imagenes"
+                   name="imagenes"
+                   accept="image/*"
+                   multiple
+                   onchange="validarImagenes(this)" />
+
+            <small>
+                Podés seleccionar hasta 10 imágenes.
+                La primera será la imagen principal.
+            </small>
+
+        </div>
+
+
+        <!-- =========================================
+             OPCIONES CONFIGURABLES DEL PRODUCTO
+        ========================================== -->
+
+        <div class="admin-options-box">
+
+            <p class="admin-options-title">
+                OPCIONES DEL PRODUCTO
+            </p>
+
+        </div>
+            <!-- JERARQUÍA -->
+
+            <label class="admin-switch-row">
+
+                <span>
+
+                    <strong>
+                        Jerarquía
+                    </strong>
+
+                    <small>
+                        El cliente podrá elegir una jerarquía.
+                    </small>
+
+                </span>
+
+                <input asp-for="UsaJerarquia"
+                       type="checkbox" />
+
+            </label>
+
+            <!-- JERARQUÍA ESSA-->
+            <label class="admin-switch-row">
+                <span>
+
+                <strong>
+                    Jerarquia ESSA
+                </strong>
+
+                <small>
+                    El cliente podrá elegir una JERARQUIA ESSA
+                </small>
+
+                </span>
+
+                <input asp-for= "TieneJerarquiaAspirantes"
+                       type="checkbox" />
+                
+            </label>
+
+            <!-- ESPECIALIDAD -->
+
+            <label class="admin-switch-row">
+
+                <span>
+
+                    <strong>
+                        Especialidad
+                    </strong>
+
+                    <small>
+                        El cliente podrá elegir una especialidad.
+                    </small>
+
+                </span>
+
+                <input asp-for="UsaEspecialidad"
+                       type="checkbox" />
+
+            </label>
+
+
+            <!-- IMAn / GANCHITO -->
+
+            <label class="admin-switch-row">
+
+                <span>
+
+                    <strong>
+                        Imagen o ganchito
+                    </strong>
+
+                    <small>
+                        El cliente podrá seleccionar cómo quiere
+                        la parte trasera.
+                    </small>
+
+                </span>
+
+                <input asp-for="UsaTipoTrasero"
+                       type="checkbox" />
+
+            </label>
+
+
+            <!-- INICIAL -->
+
+            <label class="admin-switch-row">
+
+                <span>
+
+                    <strong>
+                        Inicial
+                    </strong>
+
+                    <small>
+                        Permite que el cliente ingrese una inicial.
+                    </small>
+
+                </span>
+
+                <input asp-for="UsaInicial"
+                       type="checkbox" />
+
+            </label>
+
+
+            <!-- APELLIDO -->
+
+            <label class="admin-switch-row">
+
+                <span>
+
+                    <strong>
+                        Apellido
+                    </strong>
+
+                    <small>
+                        Permite que el cliente ingrese su apellido.
+                    </small>
+
+                </span>
+
+                <input asp-for="UsaApellido"
+                       type="checkbox" />
+
+            </label>
+        <!-- nombre personalizado-->
+        <label class="admin-switch-row">
+            <span>
+                <strong>Nombre</strong>
+                <small>Permite que el cliente ingrese un nombre de hasta 12 letras.</small>
+            </span>
+
+            <input asp-for="UsaNombre"
+                   type="checkbox" />
+        </label>
+        <!-- DESTACADO -->
+
+        <label class="admin-check">
+
+            <input asp-for="Destacado" />
+
+            Mostrar como producto destacado
+
+        </label>
+
+
+        <!-- GUARDAR -->
+
+        <button type="submit"
+                class="admin-save">
+
+            Agregar producto
+
+        </button>
+
+    </form>
+    <script>
+    function validarImagenes(input) {
+
+        if (input.files.length > 10) {
+
+            alert("Podés seleccionar como máximo 10 imágenes.");
+
+            input.value = "";
+        }
+    }
+</script>
+</section>

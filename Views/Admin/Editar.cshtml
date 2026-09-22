@@ -1,0 +1,1283 @@
+@model TiendaNaval.Models.Producto
+
+@{
+    ViewData["Title"] = "Editar producto";
+}
+
+<section class="admin-form-page">
+
+    <div class="admin-form-header">
+
+        <p class="admin-eyebrow">
+            ADMINISTRACIÓN
+        </p>
+
+        <h1>Editar producto</h1>
+
+        <a asp-action="Index"
+           class="admin-back">
+            ← Volver a productos
+        </a>
+
+    </div>
+
+    @if (TempData["ErrorImagenes"] != null)
+    {
+        <div class="admin-alert admin-alert-error">
+            @TempData["ErrorImagenes"]
+        </div>
+    }
+
+    @if (TempData["Exito"] != null)
+    {
+        <div class="admin-alert admin-alert-success">
+            @TempData["Exito"]
+        </div>
+    }
+
+    <form asp-action="Editar"
+          method="post"
+          enctype="multipart/form-data"
+          class="admin-form">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="Id" />
+
+        <!-- NOMBRE -->
+
+        <div class="admin-field full">
+            <label>Nombre del producto</label>
+            <input asp-for="Nombre" />
+        </div>
+
+
+        <!-- DESCRIPCIÓN -->
+
+        <div class="admin-field full">
+            <label>Descripción</label>
+
+            <textarea asp-for="Descripcion"
+                      rows="5"></textarea>
+        </div>
+
+
+        <!-- PRECIO -->
+
+        <div class="admin-field">
+
+            <label>Precio</label>
+
+            <input asp-for="Precio"
+                   type="number"
+                   step="0.01" />
+
+        </div>
+
+
+        <!-- STOCK -->
+
+        <div class="admin-field">
+
+            <label>Stock</label>
+
+            <input asp-for="Stock"
+                   type="number" />
+
+        </div>
+
+
+        <!-- CATEGORÍA -->
+
+        <div class="admin-field full">
+
+            <label>Categoría</label>
+
+            <select asp-for="CategoriaId">
+
+                @foreach (var categoria in
+                          (List<TiendaNaval.Models.Categoria>)ViewBag.Categorias)
+                {
+                    <option value="@categoria.Id">
+                        @categoria.Nombre
+                    </option>
+                }
+
+            </select>
+
+        </div>
+
+
+        <!-- COLECCIÓN -->
+
+        <div class="admin-field full">
+
+            <label>Colección</label>
+
+            <select asp-for="TipoColeccion"
+                    required>
+
+                <option value="">
+                    Seleccionar colección
+                </option>
+
+                <option value="ESSA">
+                    Colección ESSA
+                </option>
+
+                <option value="Armada">
+                    Colección Armada
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- =====================================
+             IMÁGENES
+        ====================================== -->
+
+        <div class="admin-field full">
+
+            <label>Agregar nuevas imágenes</label>
+
+            <div class="admin-upload-images">
+
+                <label for="imagenesInput"
+                       class="admin-image-button">
+
+                    + Agregar fotos
+
+                </label>
+
+                <input type="file"
+                       id="imagenesInput"
+                       name="imagenes"
+                       accept="image/*"
+                       multiple
+                       hidden />
+
+                <span id="cantidadImagenes">
+                    Ninguna imagen seleccionada
+                </span>
+
+            </div>
+
+            <div id="previewNuevasImagenes"
+                 class="admin-new-images-preview">
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+             OPCIONES CONFIGURABLES DEL PRODUCTO
+        ========================================== -->
+
+        <div class="admin-options-box">
+
+            <p class="admin-options-title">
+                OPCIONES DEL PRODUCTO
+            </p>
+
+
+            <!-- JERARQUÍA -->
+
+            <label class="admin-switch-row">
+
+                <span>
+
+                    <strong>
+                        Jerarquía
+                    </strong>
+
+                    <small>
+                        El cliente podrá elegir una jerarquía.
+                    </small>
+
+                </span>
+
+                <input asp-for="UsaJerarquia"
+                       type="checkbox" />
+
+            </label>
+
+
+            <!-- JERARQUÍA ESSA -->
+
+            <label class="admin-switch-row">
+
+                <span>
+
+                    <strong>
+                        Jerarquía ESSA
+                    </strong>
+
+                    <small>
+                        El cliente podrá elegir una jerarquía ESSA.
+                    </small>
+
+                </span>
+
+                <input asp-for="TieneJerarquiaAspirantes"
+                       type="checkbox" />
+
+            </label>
+
+
+            <!-- ESPECIALIDAD -->
+
+            <label class="admin-switch-row">
+
+                <span>
+
+                    <strong>
+                        Especialidad
+                    </strong>
+
+                    <small>
+                        El cliente podrá elegir una especialidad.
+                    </small>
+
+                </span>
+
+                <input asp-for="UsaEspecialidad"
+                       type="checkbox" />
+
+            </label>
+
+
+            <!-- IMAGEN / GANCHITO -->
+
+            <label class="admin-switch-row">
+
+                <span>
+
+                    <strong>
+                        Imagen o ganchito
+                    </strong>
+
+                    <small>
+                        El cliente podrá seleccionar cómo quiere
+                        la parte trasera.
+                    </small>
+
+                </span>
+
+                <input asp-for="UsaTipoTrasero"
+                       type="checkbox" />
+
+            </label>
+
+
+            <!-- INICIAL -->
+
+            <label class="admin-switch-row">
+
+                <span>
+
+                    <strong>
+                        Inicial
+                    </strong>
+
+                    <small>
+                        Permite que el cliente ingrese una inicial.
+                    </small>
+
+                </span>
+
+                <input asp-for="UsaInicial"
+                       type="checkbox" />
+
+            </label>
+
+
+            <!-- APELLIDO -->
+
+            <label class="admin-switch-row">
+
+                <span>
+
+                    <strong>
+                        Apellido
+                    </strong>
+
+                    <small>
+                        Permite que el cliente ingrese su apellido.
+                    </small>
+
+                </span>
+
+                <input asp-for="UsaApellido"
+                       type="checkbox" />
+
+            </label>
+
+
+            <!-- NOMBRE -->
+
+            <label class="admin-switch-row">
+
+                <span>
+
+                    <strong>
+                        Nombre
+                    </strong>
+
+                    <small>
+                        Permite que el cliente ingrese un nombre
+                        de hasta 12 letras.
+                    </small>
+
+                </span>
+
+                <input asp-for="UsaNombre"
+                       type="checkbox" />
+
+            </label>
+
+        </div>
+
+
+        <!-- DESTACADO -->
+
+        <label class="admin-check">
+
+            <input asp-for="Destacado" />
+
+            Mostrar como producto destacado
+
+        </label>
+
+
+        <!-- GUARDAR -->
+
+        <button type="submit"
+                class="admin-save">
+
+            Guardar cambios
+
+        </button>
+
+    </form>
+
+
+    <!-- =====================================
+         GALERÍA ACTUAL
+         IMPORTANTE: FUERA DEL FORM PRINCIPAL
+    ====================================== -->
+
+    @if (Model.Imagenes != null && Model.Imagenes.Any())
+    {
+        var imagenesOrdenadas = Model.Imagenes
+            .OrderBy(x => x.Orden)
+            .ToList();
+
+        <section class="admin-images-manager">
+
+            <div class="admin-images-manager-header">
+
+                <div>
+
+                    <span class="admin-images-eyebrow">
+                        GALERÍA
+                    </span>
+
+                    <h2>
+                        Imágenes del producto
+                    </h2>
+
+                </div>
+
+                <span class="admin-images-count">
+                    @imagenesOrdenadas.Count / 10
+                </span>
+
+            </div>
+
+
+            <div class="admin-images-grid">
+
+                @foreach (var foto in imagenesOrdenadas)
+                {
+                    var esPrincipal =
+                        foto.ImagenUrl == Model.ImagenUrl;
+
+                    <article class="admin-image-card @(esPrincipal ? "principal" : "")">
+
+                        <div class="admin-image-card-photo">
+
+                            <img src="@foto.ImagenUrl"
+                                 alt="@Model.Nombre" />
+
+                            @if (esPrincipal)
+                            {
+                                <span class="admin-principal-badge">
+                                    PRINCIPAL
+                                </span>
+                            }
+
+                        </div>
+
+
+                        <div class="admin-image-card-actions">
+
+                            @if (!esPrincipal)
+                            {
+                                <form asp-controller="Admin"
+                                      asp-action="HacerImagenPrincipal"
+                                      method="post">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="productoId"
+                                           value="@Model.Id" />
+
+                                    <input type="hidden"
+                                           name="imagenId"
+                                           value="@foto.Id" />
+
+                                    <button type="submit"
+                                            class="admin-btn-principal">
+
+                                        HACER PRINCIPAL
+
+                                    </button>
+
+                                </form>
+                            }
+
+
+                            <form asp-controller="Admin"
+                                  asp-action="EliminarImagen"
+                                  method="post"
+                                  onsubmit="return confirm('¿Querés eliminar esta imagen?');">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="productoId"
+                                       value="@Model.Id" />
+
+                                <input type="hidden"
+                                       name="imagenId"
+                                       value="@foto.Id" />
+
+                                <button type="submit"
+                                        class="admin-btn-delete-image">
+
+                                    ELIMINAR
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </article>
+                }
+
+            </div>
+
+        </section>
+    }
+
+</section>
+
+
+<script>
+
+    const imagenesInput =
+        document.getElementById("imagenesInput");
+
+    const preview =
+        document.getElementById("previewNuevasImagenes");
+
+    const cantidad =
+        document.getElementById("cantidadImagenes");
+
+
+    imagenesInput?.addEventListener(
+        "change",
+        function () {
+
+            preview.innerHTML = "";
+
+            const archivos =
+                Array.from(this.files);
+
+            if (archivos.length === 0)
+            {
+                cantidad.textContent =
+                    "Ninguna imagen seleccionada";
+
+                return;
+            }
+
+            if (archivos.length > 10)
+            {
+                alert("Podés seleccionar como máximo 10 imágenes.");
+
+                this.value = "";
+
+                cantidad.textContent =
+                    "Ninguna imagen seleccionada";
+
+                return;
+            }
+
+            cantidad.textContent =
+                archivos.length === 1
+                    ? "1 imagen seleccionada"
+                    : `${archivos.length} imágenes seleccionadas`;
+
+
+            archivos.forEach(archivo => {
+
+                const reader =
+                    new FileReader();
+
+                reader.onload =
+                    function (e) {
+
+                        const contenedor =
+                            document.createElement("div");
+
+                        contenedor.className =
+                            "admin-new-preview";
+
+
+                        const img =
+                            document.createElement("img");
+
+                        img.src =
+                            e.target.result;
+
+
+                        contenedor.appendChild(img);
+
+                        preview.appendChild(
+                            contenedor
+                        );
+                    };
+
+                reader.readAsDataURL(
+                    archivo
+                );
+            });
+
+        });
+
+</script>
+<style>
+    /* =========================================================
+   EDITAR PRODUCTO — NAVY POP
+========================================================= */
+
+    .admin-form-page {
+        --navy: #071a2f;
+        --navy-2: #0c2948;
+        --blue: #1261ff;
+        --blue-light: #eaf1ff;
+        --gold: #d5ad55;
+        --white: #ffffff;
+        --bg: #f4f7fb;
+        --text: #0b1f35;
+        --muted: #718096;
+        --border: #dce4ee;
+        --danger: #dc3545;
+
+        max-width: 1050px;
+        margin: 45px auto 80px;
+        padding: 0 25px;
+        color: var(--text);
+    }
+
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    .admin-form-header {
+        position: relative;
+        padding: 38px 42px;
+        margin-bottom: 25px;
+
+        background:
+            radial-gradient(circle at 90% 15%,
+            rgba(18, 97, 255, .35),
+            transparent 30%),
+            linear-gradient(135deg, #071a2f, #0c2948);
+
+        border-radius: 24px;
+        overflow: hidden;
+        color: white;
+
+        box-shadow: 0 15px 40px rgba(7, 26, 47, .15);
+    }
+
+    .admin-form-header::after {
+        content: "";
+        position: absolute;
+        width: 170px;
+        height: 170px;
+        border: 1px solid rgba(255,255,255,.10);
+        border-radius: 50%;
+        right: -45px;
+        bottom: -100px;
+    }
+
+    .admin-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        margin: 0 0 10px;
+
+        color: #8fb6ff;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 2.2px;
+    }
+
+    .admin-eyebrow::before {
+        content: "";
+        width: 22px;
+        height: 2px;
+        background: var(--gold);
+    }
+
+    .admin-form-header h1 {
+        margin: 0;
+        color: white;
+        font-size: clamp(30px, 4vw, 46px);
+        font-weight: 800;
+        letter-spacing: -1.5px;
+    }
+
+    .admin-back {
+        display: inline-flex;
+        align-items: center;
+
+        margin-top: 18px;
+        padding: 9px 15px;
+
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+
+        border: 1px solid rgba(255,255,255,.22);
+        border-radius: 100px;
+        background: rgba(255,255,255,.08);
+
+        transition: .2s ease;
+    }
+
+    .admin-back:hover {
+        background: white;
+        color: var(--navy);
+    }
+
+
+    /* =========================================================
+       FORMULARIO
+    ========================================================= */
+
+    .admin-form {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+
+        padding: 35px;
+
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+
+        box-shadow: 0 12px 35px rgba(7, 26, 47, .07);
+    }
+
+    .admin-field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .admin-field.full {
+        grid-column: 1 / -1;
+    }
+
+    .admin-field label {
+        color: var(--navy);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .4px;
+    }
+
+    .admin-field input,
+    .admin-field textarea,
+    .admin-field select {
+        width: 100%;
+        box-sizing: border-box;
+
+        padding: 14px 15px;
+
+        color: var(--text);
+        background: #f8fafc;
+
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+
+        font: inherit;
+        font-size: 14px;
+
+        outline: none;
+        transition: .2s ease;
+    }
+
+    .admin-field textarea {
+        min-height: 130px;
+        resize: vertical;
+    }
+
+    .admin-field input:focus,
+    .admin-field textarea:focus,
+    .admin-field select:focus {
+        background: white;
+        border-color: var(--blue);
+
+        box-shadow:
+            0 0 0 4px rgba(18, 97, 255, .10);
+    }
+
+
+    /* =========================================================
+       SUBIR IMÁGENES
+    ========================================================= */
+
+    .admin-upload-images {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        padding: 17px;
+
+        background: var(--blue-light);
+        border: 1px dashed #9bbcff;
+        border-radius: 14px;
+    }
+
+    .admin-image-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 11px 18px;
+
+        background: var(--blue);
+        color: white !important;
+
+        border-radius: 100px;
+
+        font-size: 12px !important;
+        font-weight: 800 !important;
+
+        cursor: pointer;
+
+        box-shadow: 0 6px 15px rgba(18, 97, 255, .20);
+
+        transition: .2s ease;
+    }
+
+    .admin-image-button:hover {
+        transform: translateY(-1px);
+        background: #004be0;
+    }
+
+    #cantidadImagenes {
+        color: #63758b;
+        font-size: 13px;
+    }
+
+
+    /* PREVIEW */
+
+    .admin-new-images-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 14px;
+    }
+
+    .admin-new-preview {
+        width: 110px;
+        height: 110px;
+
+        padding: 5px;
+
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+
+        overflow: hidden;
+    }
+
+    .admin-new-preview img {
+        width: 100%;
+        height: 100%;
+        display: block;
+
+        object-fit: contain;
+
+        border-radius: 9px;
+    }
+
+
+    /* =========================================================
+       OPCIONES DEL PRODUCTO
+    ========================================================= */
+
+    .admin-options-box {
+        grid-column: 1 / -1;
+
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+
+        padding: 25px;
+
+        background: #f7f9fc;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+    }
+
+    .admin-options-title {
+        grid-column: 1 / -1;
+
+        margin: 0 0 8px;
+
+        color: var(--navy);
+
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 1.8px;
+    }
+
+    .admin-switch-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+
+        min-height: 65px;
+        padding: 14px 16px;
+
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+
+        cursor: pointer;
+
+        transition: .2s ease;
+    }
+
+    .admin-switch-row:hover {
+        border-color: #a8c2f5;
+
+        box-shadow:
+            0 6px 16px rgba(7, 26, 47, .06);
+
+        transform: translateY(-1px);
+    }
+
+    .admin-switch-row span {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .admin-switch-row strong {
+        color: var(--navy);
+        font-size: 13px;
+    }
+
+    .admin-switch-row small {
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.35;
+    }
+
+
+    /* CHECKBOX ESTILO NAVY POP */
+
+    .admin-switch-row input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+
+        flex: 0 0 auto;
+
+        width: 42px;
+        height: 23px;
+
+        position: relative;
+
+        background: #d9e1eb;
+
+        border: none;
+        border-radius: 100px;
+
+        cursor: pointer;
+
+        transition: .25s;
+    }
+
+    .admin-switch-row input[type="checkbox"]::before {
+        content: "";
+
+        position: absolute;
+
+        width: 17px;
+        height: 17px;
+
+        top: 3px;
+        left: 3px;
+
+        background: white;
+
+        border-radius: 50%;
+
+        box-shadow: 0 2px 5px rgba(0,0,0,.15);
+
+        transition: .25s;
+    }
+
+    .admin-switch-row input[type="checkbox"]:checked {
+        background: var(--blue);
+    }
+
+    .admin-switch-row input[type="checkbox"]:checked::before {
+        transform: translateX(19px);
+    }
+
+
+    /* =========================================================
+       DESTACADO
+    ========================================================= */
+
+    .admin-check {
+        grid-column: 1 / -1;
+
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        padding: 15px 17px;
+
+        background: #fffaf0;
+        border: 1px solid #ead6a5;
+        border-radius: 13px;
+
+        color: var(--navy);
+
+        font-size: 13px;
+        font-weight: 700;
+
+        cursor: pointer;
+    }
+
+    .admin-check input {
+        width: 17px;
+        height: 17px;
+        accent-color: var(--gold);
+    }
+
+
+    /* =========================================================
+       GUARDAR
+    ========================================================= */
+
+    .admin-save {
+        grid-column: 1 / -1;
+
+        width: 100%;
+
+        padding: 16px 25px;
+
+        border: none;
+        border-radius: 14px;
+
+        background:
+            linear-gradient(135deg, var(--blue), #0644c7);
+
+        color: white;
+
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: .8px;
+
+        cursor: pointer;
+
+        box-shadow:
+            0 8px 20px rgba(18, 97, 255, .22);
+
+        transition: .2s ease;
+    }
+
+    .admin-save:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 12px 25px rgba(18, 97, 255, .30);
+    }
+
+
+    /* =========================================================
+       GALERÍA ACTUAL
+    ========================================================= */
+
+    .admin-images-manager {
+        margin-top: 28px;
+        padding: 30px;
+
+        background: white;
+
+        border: 1px solid var(--border);
+        border-radius: 24px;
+
+        box-shadow:
+            0 12px 35px rgba(7, 26, 47, .07);
+    }
+
+    .admin-images-manager-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 22px;
+    }
+
+    .admin-images-eyebrow {
+        display: block;
+
+        margin-bottom: 4px;
+
+        color: var(--blue);
+
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 2px;
+    }
+
+    .admin-images-manager h2 {
+        margin: 0;
+
+        color: var(--navy);
+
+        font-size: 23px;
+        font-weight: 800;
+    }
+
+    .admin-images-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        min-width: 55px;
+
+        padding: 7px 12px;
+
+        background: var(--navy);
+        color: white;
+
+        border-radius: 100px;
+
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+
+    /* =========================================================
+       CARDS DE FOTOS
+    ========================================================= */
+
+    .admin-images-grid {
+        display: grid;
+
+        grid-template-columns:
+        repeat(auto-fill, minmax(170px, 1fr));
+
+        gap: 16px;
+    }
+
+    .admin-image-card {
+        min-width: 0;
+
+        overflow: hidden;
+
+        background: #f8fafc;
+
+        border: 1px solid var(--border);
+        border-radius: 16px;
+
+        transition: .2s ease;
+    }
+
+    .admin-image-card:hover {
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 10px 25px rgba(7, 26, 47, .10);
+    }
+
+    .admin-image-card.principal {
+        border: 2px solid var(--blue);
+    }
+
+
+    /* FOTO */
+
+    .admin-image-card-photo {
+        position: relative;
+
+        width: 100%;
+        height: 170px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 8px;
+
+        box-sizing: border-box;
+
+        background: white;
+
+        overflow: hidden;
+    }
+
+    .admin-image-card-photo img {
+        width: 100%;
+        height: 100%;
+
+        object-fit: contain;
+
+        display: block;
+    }
+
+
+    /* PRINCIPAL */
+
+    .admin-principal-badge {
+        position: absolute;
+
+        top: 9px;
+        left: 9px;
+
+        padding: 5px 9px;
+
+        background: var(--blue);
+        color: white;
+
+        border-radius: 100px;
+
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: .7px;
+
+        box-shadow:
+            0 4px 10px rgba(18, 97, 255, .20);
+    }
+
+
+    /* =========================================================
+       BOTONES GALERÍA
+    ========================================================= */
+
+    .admin-image-card-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        padding: 9px;
+    }
+
+    .admin-image-card-actions form {
+        margin: 0;
+        width: 100%;
+    }
+
+    .admin-btn-principal,
+    .admin-btn-delete-image {
+        width: 100%;
+
+        padding: 8px 6px;
+
+        border-radius: 8px;
+
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: .3px;
+
+        cursor: pointer;
+
+        transition: .2s ease;
+    }
+
+    .admin-btn-principal {
+        color: var(--navy);
+
+        background: white;
+
+        border: 1px solid var(--navy);
+    }
+
+    .admin-btn-principal:hover {
+        color: white;
+        background: var(--navy);
+    }
+
+    .admin-btn-delete-image {
+        color: #b42318;
+
+        background: #fff5f4;
+
+        border: 1px solid #ffd4d0;
+    }
+
+    .admin-btn-delete-image:hover {
+        color: white;
+        background: #c92a2a;
+        border-color: #c92a2a;
+    }
+
+
+    /* =========================================================
+       ALERTAS
+    ========================================================= */
+
+    .admin-alert {
+        margin-bottom: 18px;
+
+        padding: 14px 18px;
+
+        border-radius: 12px;
+
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .admin-alert-error {
+        color: #9b1c1c;
+        background: #fff1f1;
+        border: 1px solid #ffcaca;
+    }
+
+    .admin-alert-success {
+        color: #17633a;
+        background: #effbf4;
+        border: 1px solid #bce8cd;
+    }
+</style>

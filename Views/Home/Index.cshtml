@@ -1,0 +1,263 @@
+@model IEnumerable<TiendaNaval.Models.Producto>
+
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<section class="rhode-hero">
+    <div class="rhode-hero-overlay">
+        <p class="rhode-eyebrow">COLECCIÓN NAVAL</p>
+
+        <h1>
+            Diseños que<br />
+            Navegan con vos.<br />
+            
+        </h1>
+
+        <p class="rhode-hero-text">
+            Accesorios navales pensados para tu dia a dia.
+        </p>
+
+        <a asp-controller="Productos"
+           asp-action="Index"
+           class="rhode-button">
+            COMPRAR AHORA
+        </a>
+    </div>
+    <!-- CONEJO -->
+    <img src="~/images/conejosinfondo3.png"
+         class="conejo-hero"
+         alt="Conejo VyR" />
+</section>
+
+
+<section class="rhode-intro">
+
+    <!-- TEXTO -->
+    <div class="rhode-intro-content">
+
+        <p class="rhode-eyebrow">
+            VyR
+        </p>
+
+        <h2>
+            Más que accesorios,<br />
+            identidad naval.
+        </h2>
+
+        <p class="rhode-intro-text">
+            Pensados para formar parte de tu día a día.
+        </p>
+
+        <a asp-controller="ColeccionArmada"
+           asp-action="Index"
+           class="rhode-link">
+            DESCUBRIR LA COLECCIÓN →
+        </a>
+
+    </div>
+    
+
+    <!-- IMAGEN -->
+    <div class="rhode-editorial-image">
+
+        <img src="~/images/conejooficina.png"
+             alt="Colección VyR" />
+
+    </div>
+
+</section>
+<section class="rhode-products">
+
+    <div class="rhode-section-header">
+
+        <div>
+            <p class="rhode-eyebrow">
+                DESTACADOS
+            </p>
+
+            <h2>
+                Shop the collection
+            </h2>
+        </div>
+
+        <a asp-controller="Productos"
+           asp-action="Index"
+           class="rhode-view-all">
+            VER TODO →
+        </a>
+
+    </div>
+
+
+    <div class="rhode-product-grid">
+
+        @if (Model != null && Model.Any())
+        {
+            foreach (var producto in Model.Take(4))
+            {
+                <article class="rhode-product-card">
+
+                    <a asp-controller="Productos"
+                       asp-action="Detalle"
+                       asp-route-id="@producto.Id"
+                       class="rhode-product-image">
+
+                        @if (!string.IsNullOrEmpty(producto.ImagenUrl))
+                        {
+                            <img src="@producto.ImagenUrl"
+                                 alt="@producto.Nombre" />
+                        }
+                        else
+                        {
+                            <div class="rhode-placeholder">
+                                VyR
+                            </div>
+                        }
+
+                    </a>
+
+                    <div class="rhode-product-info">
+
+                        <div>
+                            <p class="rhode-product-name">
+                                @producto.Nombre
+                            </p>
+                            
+                        </div>
+
+                        <span class="rhode-product-price">
+                            $@producto.Precio.ToString("N0")
+                        </span>
+
+                    </div>
+
+                </article>
+            }
+        }
+        else
+        {
+            <div class="rhode-empty">
+                <p>Muy pronto vas a encontrar nuestros productos acá.</p>
+            </div>
+        }
+
+    </div>
+
+</section>
+
+
+<section class="rhode-editorial">
+
+    <div class="rhode-editorial-image">
+        <img src="~/conejosoldado.jpeg" alt="VyR Colección Naval" />
+    </div>
+
+    <div class="rhode-editorial-content">
+
+        <p class="rhode-eyebrow">
+            NUESTRA IDENTIDAD
+        </p>
+
+        <h2>
+            “Desde aspirante,
+            con orgullo.”
+        </h2>
+
+        <p>
+            “Todo lo que necesitás para tu día a día como aspirante, en un solo lugar.”
+        </p>
+
+        <a asp-controller="Coleccion"
+           asp-action="Index"
+           class="rhode-link">
+            DESCUBRIR LA COLECCIÓN ESSA →
+        </a>
+
+    </div>
+
+</section>
+
+
+<section class="rhode-marquee">
+
+    <div class="rhode-marquee-track">
+
+        <span>TIENDA NAVAL</span>
+        <span>IDENTIDAD</span>
+        <span>TRADICIÓN</span>
+        <span>DISEÑO</span>
+
+        <span>TIENDA NAVAL</span>
+        <span>IDENTIDAD</span>
+        <span>TRADICIÓN</span>
+        <span>DISEÑO</span>
+
+    </div>
+
+</section>
+<section class="productos-home">
+
+    <div class="productos-home-header">
+        <p class="eyebrow">DESTACADOS</p>
+        <h2>Productos seleccionados</h2>
+    </div>
+
+    <div class="productos-grid">
+
+        @if (Model != null && Model.Any())
+        {
+            foreach (var producto in Model.Take(8))
+            {
+                <article class="producto-card">
+
+                    <a asp-controller="Productos"
+                       asp-action="Detalle"
+                       asp-route-id="@producto.Id"
+                       class="producto-imagen">
+
+                        @if (!string.IsNullOrEmpty(producto.ImagenUrl))
+                        {
+                            <img src="@producto.ImagenUrl"
+                                 alt="@producto.Nombre" />
+                        }
+                        else
+                        {
+                            <div class="sin-imagen">
+                                VYR
+                            </div>
+                        }
+
+                    </a>
+
+                    <div class="producto-info">
+
+                        <div class="producto-texto">
+                            <h3>@producto.Nombre</h3>
+                            
+                        </div>
+
+                        <span class="producto-precio">
+                            $@producto.Precio.ToString("N0")
+                        </span>
+
+                    </div>
+
+                    <a asp-controller="Productos"
+                       asp-action="Detalle"
+                       asp-route-id="@producto.Id"
+                       class="producto-boton">
+                        COMPRAR
+                    </a>
+
+                </article>
+            }
+        }
+        else
+        {
+            <p>No hay productos cargados todavía.</p>
+        }
+
+    </div>
+
+</section>

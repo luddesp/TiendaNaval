@@ -1,0 +1,85 @@
+@model List<TiendaNaval.Models.Categoria>
+
+@{
+    ViewData["Title"] = "Categorías";
+}
+
+<section class="admin-page">
+
+    <div class="admin-top">
+
+        <div>
+            <p class="admin-eyebrow">
+                ADMINISTRACIÓN
+            </p>
+
+            <h1>Categorías</h1>
+        </div>
+
+        <a asp-action="Index"
+           class="admin-btn">
+            ← Productos
+        </a>
+
+    </div>
+
+
+    <div class="category-admin-grid">
+
+        <div class="category-create">
+
+            <h2>Nueva categoría</h2>
+
+            <form asp-action="CrearCategoria"
+                  method="post">
+
+                <input name="nombre"
+                       placeholder="Nombre de la categoría"
+                       required/>
+
+                <button type="submit"
+                        class="admin-save">
+                    Crear categoría
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <div class="category-list">
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="admin-error">
+                    @TempData["Error"]
+                </div>
+            }
+
+            @foreach (var categoria in Model)
+            {
+                <div class="category-row">
+
+                    <span>
+                        @categoria.Nombre
+                    </span>
+
+                    <form asp-action="EliminarCategoria"
+                          asp-route-id="@categoria.Id"
+                          method="post"
+                          onsubmit="return confirm('¿Eliminar esta categoría?');">
+
+                        <button type="submit">
+                            Eliminar
+                        </button>
+
+                    </form>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</section>

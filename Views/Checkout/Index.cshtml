@@ -1,0 +1,587 @@
+@model TiendaNaval.Models.Pedido
+
+@{
+    ViewData["Title"] = "Finalizar compra";
+}
+
+<section class="checkout-page">
+
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
+
+    <header class="checkout-header">
+
+        <div>
+            <p class="checkout-eyebrow">
+                VYR / COLECCIÓN NAVAL
+            </p>
+
+            <h1>
+                Finalizar<br />
+                compra<span>.</span>
+            </h1>
+        </div>
+
+        <div class="checkout-header-side">
+            <span>04 / CHECKOUT</span>
+
+            <p>
+                Completá tus datos para<br />
+                confirmar el pedido.
+            </p>
+        </div>
+
+    </header>
+
+
+    <div class="checkout-grid">
+
+        <!-- ==========================================
+             FORMULARIO
+        =========================================== -->
+
+        <div class="checkout-form-wrapper">
+
+            <form asp-controller="Checkout"
+                  asp-action="Finalizar"
+                  method="post"
+                  class="checkout-form">
+
+                @Html.AntiForgeryToken()
+
+
+                <!-- ==========================================
+                     01 - DATOS PERSONALES
+                =========================================== -->
+
+                <section class="checkout-form-section">
+
+                    <div class="checkout-section-title">
+
+                        <span>01</span>
+
+                        <div>
+                            <p>DATOS</p>
+                            <h2>Datos personales</h2>
+                        </div>
+
+                    </div>
+
+
+                    <div class="checkout-fields">
+
+                        <div class="checkout-field full">
+
+                            <label>
+                                NOMBRE Y APELLIDO *
+                            </label>
+
+                            <input asp-for="NombreCliente"
+                                   placeholder="Ej. Juan Pérez"
+                                   required />
+
+                            <span asp-validation-for="NombreCliente"
+                                  class="checkout-validation">
+                            </span>
+
+                        </div>
+
+
+                        <div class="checkout-field">
+
+                            <label>
+                                TELÉFONO *
+                            </label>
+
+                            <input asp-for="Telefono"
+                                   type="tel"
+                                   placeholder="Ej. 11 1234 5678"
+                                   required />
+
+                            <span asp-validation-for="Telefono"
+                                  class="checkout-validation">
+                            </span>
+
+                        </div>
+
+
+                        <div class="checkout-field">
+
+                            <label>
+                                LOCALIDAD *
+                            </label>
+
+                            <input asp-for="Localidad"
+                                   placeholder="Ej. Punta Alta"
+                                   required />
+
+                            <span asp-validation-for="Localidad"
+                                  class="checkout-validation">
+                            </span>
+
+                        </div>
+
+
+                        <div class="checkout-field full">
+
+                            <label>
+                                OBSERVACIONES
+                            </label>
+
+                            <textarea asp-for="Observaciones"
+                                      rows="4"
+                                      placeholder="¿Querés indicarnos algo sobre tu pedido?"></textarea>
+
+                            <span asp-validation-for="Observaciones"
+                                  class="checkout-validation">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     02 - FORMA DE PAGO
+                =========================================== -->
+
+                <section class="checkout-form-section">
+
+                    <div class="checkout-section-title">
+
+                        <span>02</span>
+
+                        <div>
+                            <p>PAGO</p>
+                            <h2>Forma de pago</h2>
+                        </div>
+
+                    </div>
+
+
+                    <div class="checkout-payment-card">
+
+                        <div class="checkout-payment-icon">
+                            $
+                        </div>
+
+
+                        <div class="checkout-payment-content">
+
+                            <p class="payment-name">
+                                TRANSFERENCIA BANCARIA
+                            </p>
+
+                            <p class="payment-description">
+                                Al confirmar el pedido se abrirá WhatsApp
+                                con el detalle de tu compra. Una vez enviado
+                                el comprobante comenzará la preparación
+                                del pedido.
+                            </p>
+
+                        </div>
+
+
+                        <span class="payment-check">
+                            ✓
+                        </span>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     03 - MÉTODO DE ENVÍO
+                =========================================== -->
+
+                <section class="checkout-form-section">
+
+                    <div class="checkout-section-title">
+
+                        <span>03</span>
+
+                        <div>
+                            <p>ENTREGA</p>
+                            <h2>Método de envío</h2>
+                        </div>
+
+                    </div>
+
+
+                    <div class="shipping-option"
+                         id="shippingCadete"
+                         role="button"
+                         tabindex="0"
+                         onclick="seleccionarEnvio()"
+                         onkeydown="if(event.key === 'Enter' || event.key === ' ') seleccionarEnvio()">
+
+                        <div class="shipping-option-left">
+
+                            <div class="shipping-option-number">
+                                01
+                            </div>
+
+                            <div>
+
+                                <p class="payment-name">
+                                    CADETE — ZONA PUNTA ALTA
+                                </p>
+
+                                <p class="payment-description">
+                                    Entrega a domicilio dentro de Punta Alta.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <span class="shipping-check"
+                              id="shippingCheck">
+                            ✓
+                        </span>
+
+                    </div>
+
+
+                    <input type="hidden"
+                           asp-for="MetodoEnvio"
+                           id="MetodoEnvio" />
+
+
+                    <span asp-validation-for="MetodoEnvio"
+                          class="checkout-validation">
+                    </span>
+
+
+                    <!-- ==========================================
+                         DIRECCIÓN DE ENTREGA
+                    =========================================== -->
+
+                    <div id="datosEnvio"
+                         class="shipping-address"
+                         style="display:none;">
+
+                        <div class="shipping-address-header">
+
+                            <p class="checkout-eyebrow">
+                                DIRECCIÓN DE ENTREGA
+                            </p>
+
+                            <span>
+                                PUNTA ALTA
+                            </span>
+
+                        </div>
+
+
+                        <div class="checkout-fields">
+
+                            <div class="checkout-field full">
+
+                                <label>
+                                    CALLE Y NÚMERO *
+                                </label>
+
+                                <input asp-for="Direccion"
+                                       id="DireccionEnvio"
+                                       placeholder="Ej. Rivadavia 1250" />
+
+                                <span asp-validation-for="Direccion"
+                                      class="checkout-validation">
+                                </span>
+
+                            </div>
+
+
+                            <div class="checkout-field">
+
+                                <label>
+                                    PISO
+                                </label>
+
+                                <input asp-for="Piso"
+                                       placeholder="Ej. 2" />
+
+                            </div>
+
+
+                            <div class="checkout-field">
+
+                                <label>
+                                    DEPARTAMENTO
+                                </label>
+
+                                <input asp-for="Departamento"
+                                       placeholder="Ej. B" />
+
+                            </div>
+
+
+                            <div class="checkout-field full">
+
+                                <label>
+                                    BARRIO *
+                                </label>
+
+                                <input asp-for="Barrio"
+                                       id="BarrioEnvio"
+                                       placeholder="Ej. Ciudad Atlántida" />
+
+                                <span asp-validation-for="Barrio"
+                                      class="checkout-validation">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     04 - TRANSFERENCIA
+                =========================================== -->
+
+                <section class="checkout-form-section checkout-bank-section">
+
+                    <div class="checkout-section-title">
+
+                        <span>04</span>
+
+                        <div>
+                            <p>TRANSFERENCIA</p>
+                            <h2>Datos para transferir</h2>
+                        </div>
+
+                    </div>
+
+
+                    <div class="checkout-bank">
+
+                        <div class="checkout-bank-row">
+
+                            <span>
+                                ALIAS
+                            </span>
+
+                            <strong>
+                                @ViewBag.Alias
+                            </strong>
+
+                        </div>
+
+
+                        <div class="checkout-bank-row">
+
+                            <span>
+                                CBU
+                            </span>
+
+                            <strong>
+                                @ViewBag.CBU
+                            </strong>
+
+                        </div>
+
+
+                        <div class="checkout-bank-row">
+
+                            <span>
+                                TITULAR
+                            </span>
+
+                            <strong>
+                                @ViewBag.Titular
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     CONFIRMAR
+                =========================================== -->
+
+                <button type="submit"
+                        class="checkout-submit">
+
+                    <span>
+                        CONFIRMAR PEDIDO
+                    </span>
+
+                    <span class="checkout-submit-arrow">
+                        →
+                    </span>
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ==========================================
+             RESUMEN
+        =========================================== -->
+
+        <aside class="checkout-summary">
+
+            <div class="checkout-summary-header">
+
+                <p class="checkout-eyebrow">
+                    TU COMPRA
+                </p>
+
+                <h2>
+                    Ya casi<br />
+                    está<span>.</span>
+                </h2>
+
+            </div>
+
+
+            <p class="checkout-summary-text">
+                Completá tus datos y confirmá el pedido.
+                Después te vamos a dirigir automáticamente
+                a WhatsApp.
+            </p>
+
+
+            <div class="checkout-summary-divider"></div>
+
+
+            <div class="checkout-summary-info">
+
+                <div>
+
+                    <span>
+                        FORMA DE PAGO
+                    </span>
+
+                    <p>
+                        Transferencia bancaria
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        CONFIRMACIÓN
+                    </span>
+
+                    <p>
+                        WhatsApp
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        ESTADO INICIAL
+                    </span>
+
+                    <p>
+                        Pendiente
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="checkout-summary-divider"></div>
+
+
+            <div class="checkout-summary-status">
+
+                <span class="checkout-status-dot"></span>
+
+                <p>
+                    Tu pedido todavía no será cobrado.
+                </p>
+
+            </div>
+
+
+            <a asp-controller="Carrito"
+               asp-action="Index"
+               class="checkout-back">
+
+                <span>
+                    ←
+                </span>
+
+                VOLVER AL CARRITO
+
+            </a>
+
+        </aside>
+
+    </div>
+
+</section>
+
+
+<script>
+
+    function seleccionarEnvio() {
+
+        const opcion =
+            document.getElementById(
+                "shippingCadete"
+            );
+
+        const datos =
+            document.getElementById(
+                "datosEnvio"
+            );
+
+        const metodo =
+            document.getElementById(
+                "MetodoEnvio"
+            );
+
+        const direccion =
+            document.getElementById(
+                "DireccionEnvio"
+            );
+
+        const barrio =
+            document.getElementById(
+                "BarrioEnvio"
+            );
+
+
+        metodo.value =
+            "Cadete - Zona Punta Alta";
+
+
+        opcion.classList.add(
+            "selected"
+        );
+
+
+        datos.style.display =
+            "block";
+
+
+        direccion.required = true;
+        barrio.required = true;
+
+    }
+
+</script>

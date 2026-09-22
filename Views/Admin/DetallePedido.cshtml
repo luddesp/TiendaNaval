@@ -1,0 +1,428 @@
+@model TiendaNaval.Models.Pedido
+
+@{
+    ViewData["Title"] = $"Pedido #{Model.Id}";
+}
+
+<section class="admin-page order-detail-page">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <div class="detail-header">
+
+        <div>
+
+            <p class="admin-eyebrow">
+                PEDIDO #@Model.Id
+            </p>
+
+            <h1>
+                Detalle del pedido
+            </h1>
+
+            <p class="detail-date">
+                @Model.Fecha
+                    .ToLocalTime()
+                    .ToString("dd/MM/yyyy · HH:mm")
+            </p>
+
+        </div>
+
+
+        <a asp-action="Pedidos"
+           class="admin-btn">
+            ← Pedidos
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         ESTADO + TOTAL
+    ========================== -->
+
+    <div class="detail-main-summary">
+
+        <div>
+
+            <span class="detail-small-label">
+                ESTADO
+            </span>
+
+            <span class="order-state
+                         state-@Model.Estado.ToLower().Replace(" ", "-")">
+
+                @Model.Estado
+
+            </span>
+
+        </div>
+
+
+        <div class="detail-main-total">
+
+            <span>
+                TOTAL DEL PEDIDO
+            </span>
+
+            <strong>
+                $@Model.Total.ToString("N0")
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CLIENTE + ENVÍO
+    ========================== -->
+
+    <div class="detail-grid">
+
+        <!-- CLIENTE -->
+
+        <article class="detail-card">
+
+            <p class="detail-card-eyebrow">
+                CLIENTE
+            </p>
+
+            <h2>
+                @Model.NombreCliente
+            </h2>
+
+
+            <div class="detail-info-list">
+
+                <div>
+                    <span>Teléfono</span>
+                    <strong>@Model.Telefono</strong>
+                </div>
+
+
+                @if (!string.IsNullOrWhiteSpace(Model.Direccion))
+                {
+                    <div>
+                        <span>Dirección</span>
+                        <strong>@Model.Direccion</strong>
+                    </div>
+                }
+
+
+                @if (!string.IsNullOrWhiteSpace(Model.Localidad))
+                {
+                    <div>
+                        <span>Localidad</span>
+                        <strong>@Model.Localidad</strong>
+                    </div>
+                }
+
+
+                @if (!string.IsNullOrWhiteSpace(Model.Barrio))
+                {
+                    <div>
+                        <span>Barrio</span>
+                        <strong>@Model.Barrio</strong>
+                    </div>
+                }
+
+
+                @if (!string.IsNullOrWhiteSpace(Model.Piso))
+                {
+                    <div>
+                        <span>Piso</span>
+                        <strong>@Model.Piso</strong>
+                    </div>
+                }
+
+
+                @if (!string.IsNullOrWhiteSpace(Model.Departamento))
+                {
+                    <div>
+                        <span>Departamento</span>
+                        <strong>@Model.Departamento</strong>
+                    </div>
+                }
+
+            </div>
+
+        </article>
+
+
+        <!-- ENVÍO Y PAGO -->
+
+        <article class="detail-card">
+
+            <p class="detail-card-eyebrow">
+                PEDIDO
+            </p>
+
+            <h2>
+                Información
+            </h2>
+
+
+            <div class="detail-info-list">
+
+                <div>
+                    <span>Método de envío</span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.MetodoEnvio)
+                            ? "Sin especificar"
+                            : Model.MetodoEnvio)
+                    </strong>
+                </div>
+
+
+                <div>
+                    <span>Método de pago</span>
+                    <strong>@Model.MetodoPago</strong>
+                </div>
+
+
+                <div>
+                    <span>Fecha</span>
+
+                    <strong>
+                        @Model.Fecha
+                            .ToLocalTime()
+                            .ToString("dd/MM/yyyy HH:mm")
+                    </strong>
+                </div>
+
+
+                <div>
+                    <span>Cantidad de productos</span>
+
+                    <strong>
+                        @Model.Detalles.Sum(x => x.Cantidad)
+                    </strong>
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
+
+
+    <!-- =========================
+         OBSERVACIONES
+    ========================== -->
+
+    @if (!string.IsNullOrWhiteSpace(Model.Observaciones))
+    {
+        <article class="detail-observations">
+
+            <span>
+                OBSERVACIONES
+            </span>
+
+            <p>
+                @Model.Observaciones
+            </p>
+
+        </article>
+    }
+
+
+    <!-- =========================
+         PRODUCTOS
+    ========================== -->
+
+    <section class="detail-products">
+
+        <div class="detail-products-header">
+
+            <div>
+
+                <p class="detail-card-eyebrow">
+                    COMPRA
+                </p>
+
+                <h2>
+                    Productos
+                </h2>
+
+            </div>
+
+            <span>
+                @Model.Detalles.Sum(x => x.Cantidad)
+                producto(s)
+            </span>
+
+        </div>
+
+
+        @foreach (var detalle in Model.Detalles)
+        {
+            <article class="detail-product">
+
+                <!-- PRODUCTO HEADER -->
+
+                <div class="detail-product-header">
+
+                    <div>
+
+                        <span class="detail-product-quantity">
+                            @detalle.Cantidad ×
+                        </span>
+
+                        <h3>
+                            @detalle.NombreProducto
+                        </h3>
+
+                    </div>
+
+
+                    <div class="detail-product-price">
+
+                        <span>
+                            $@detalle.PrecioUnitario.ToString("N0") c/u
+                        </span>
+
+                        <strong>
+                            $@detalle.Subtotal.ToString("N0")
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                     OPCIONES PERSONALIZADAS
+                ========================== -->
+
+                @if (
+                    !string.IsNullOrWhiteSpace(detalle.Color) ||
+                    !string.IsNullOrWhiteSpace(detalle.Especialidad) ||
+                    !string.IsNullOrWhiteSpace(detalle.Jerarquia) ||
+                    !string.IsNullOrWhiteSpace(detalle.JerarquiaAspirantes) ||
+                    !string.IsNullOrWhiteSpace(detalle.ConGanchito) ||
+                    !string.IsNullOrWhiteSpace(detalle.ConNombre) ||
+                    !string.IsNullOrWhiteSpace(detalle.NombreApellido) ||
+                    !string.IsNullOrWhiteSpace(detalle.Inicial) ||
+                    !string.IsNullOrWhiteSpace(detalle.Apellido) ||
+                    !string.IsNullOrWhiteSpace(detalle.NombrePersonalizado)
+                )
+                {
+                    <div class="product-options">
+
+                        @if (!string.IsNullOrWhiteSpace(detalle.Color))
+                        {
+                            <div>
+                                <span>Color</span>
+                                <strong>@detalle.Color</strong>
+                            </div>
+                        }
+
+
+                        @if (!string.IsNullOrWhiteSpace(detalle.Especialidad))
+                        {
+                            <div>
+                                <span>Especialidad</span>
+                                <strong>@detalle.Especialidad</strong>
+                            </div>
+                        }
+
+
+                        @if (!string.IsNullOrWhiteSpace(detalle.Jerarquia))
+                        {
+                            <div>
+                                <span>Jerarquía</span>
+                                <strong>@detalle.Jerarquia</strong>
+                            </div>
+                        }
+
+
+                        @if (!string.IsNullOrWhiteSpace(detalle.JerarquiaAspirantes))
+                        {
+                            <div>
+                                <span>Jerarquía aspirante</span>
+                                <strong>@detalle.JerarquiaAspirantes</strong>
+                            </div>
+                        }
+
+
+                        @if (!string.IsNullOrWhiteSpace(detalle.ConGanchito))
+                        {
+                            <div>
+                                <span>Tipo trasero</span>
+                                <strong>@detalle.ConGanchito</strong>
+                            </div>
+                        }
+
+
+                        @if (!string.IsNullOrWhiteSpace(detalle.ConNombre))
+                        {
+                            <div>
+                                <span>Con nombre</span>
+                                <strong>@detalle.ConNombre</strong>
+                            </div>
+                        }
+
+
+                        @if (!string.IsNullOrWhiteSpace(detalle.NombreApellido))
+                        {
+                            <div>
+                                <span>Nombre y apellido</span>
+                                <strong>@detalle.NombreApellido</strong>
+                            </div>
+                        }
+
+
+                        @if (!string.IsNullOrWhiteSpace(detalle.Inicial))
+                        {
+                            <div>
+                                <span>Inicial</span>
+                                <strong>@detalle.Inicial</strong>
+                            </div>
+                        }
+
+
+                        @if (!string.IsNullOrWhiteSpace(detalle.Apellido))
+                        {
+                            <div>
+                                <span>Apellido</span>
+                                <strong>@detalle.Apellido</strong>
+                            </div>
+                        }
+
+
+                        @if (!string.IsNullOrWhiteSpace(detalle.NombrePersonalizado))
+                        {
+                            <div>
+                                <span>Nombre personalizado</span>
+                                <strong>@detalle.NombrePersonalizado</strong>
+                            </div>
+                        }
+
+                    </div>
+                }
+
+            </article>
+        }
+
+
+        <!-- TOTAL -->
+
+        <div class="detail-final-total">
+
+            <span>
+                TOTAL
+            </span>
+
+            <strong>
+                $@Model.Total.ToString("N0")
+            </strong>
+
+        </div>
+
+    </section>
+
+</section>

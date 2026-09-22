@@ -1,0 +1,1690 @@
+@model TiendaNaval.Models.Pedido
+
+@{
+    ViewData["Title"] = $"Pedido #{Model.Id}";
+
+    var estado = (Model.Estado ?? "Pendiente").Trim();
+
+    var cancelado =
+        estado.Equals(
+            "Cancelado",
+            StringComparison.OrdinalIgnoreCase
+        );
+
+    var pasoActual = estado.ToLowerInvariant() switch
+    {
+        "pendiente" => 1,
+        "pagado" => 2,
+        "preparando" => 3,
+        "entregado" => 4,
+        _ => 1
+    };
+
+    string TextoEstado()
+    {
+        if (cancelado)
+            return "Tu pedido fue cancelado.";
+
+        return pasoActual switch
+        {
+            1 => "Recibimos tu pedido.",
+            2 => "Tu pago fue confirmado.",
+            3 => "Estamos preparando tu pedido.",
+            4 => "Tu pedido fue entregado.",
+            _ => "Estamos procesando tu pedido."
+        };
+    }
+}
+
+
+<section class="tracking-detail-page">
+
+    <div class="tracking-detail-shell">
+
+
+        <!-- =========================================
+             ENCABEZADO
+        ========================================== -->
+
+        <header class="tracking-detail-header">
+
+            <div>
+
+                <p class="tracking-detail-eyebrow">
+                    VYR / SEGUIMIENTO
+                </p>
+
+                <h1>
+                    Pedido #@Model.Id
+                    <span>✦</span>
+                </h1>
+
+                <p class="tracking-detail-date">
+                    Realizado el
+                    @Model.Fecha.ToLocalTime().ToString("dd/MM/yyyy")
+                    ·
+                    @Model.Fecha.ToLocalTime().ToString("HH:mm")
+                </p>
+
+            </div>
+
+
+            <div class="tracking-status-badge
+                        @(cancelado ? "cancelled" : "")">
+
+                @if (cancelado)
+                {
+                    <span class="tracking-status-dot"></span>
+                    <span>CANCELADO</span>
+                }
+                else
+                {
+                    <span class="tracking-status-dot"></span>
+                    <span>@estado.ToUpper()</span>
+                }
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================================
+             MENSAJE DE ESTADO
+        ========================================== -->
+
+        @if (cancelado)
+        {
+            <div class="tracking-cancelled-message">
+
+                <div class="tracking-cancelled-icon">
+                    ×
+                </div>
+
+                <div>
+
+                    <span>
+                        PEDIDO CANCELADO
+                    </span>
+
+                    <p>
+                        Este pedido figura como cancelado.
+                        Si necesitás ayuda, comunicate con VyR.
+                    </p>
+
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="tracking-current-message">
+
+                <span class="tracking-current-star">
+                    ✦
+                </span>
+
+                <div>
+
+                    <span class="tracking-current-label">
+                        ESTADO ACTUAL
+                    </span>
+
+                    <p>
+                        @TextoEstado()
+                    </p>
+
+                </div>
+
+            </div>
+        }
+
+
+        <!-- =========================================
+             PROGRESO
+        ========================================== -->
+
+        @if (!cancelado)
+        {
+            <section class="tracking-progress-card">
+
+                <div class="tracking-section-heading">
+
+                    <span>
+                        SEGUIMIENTO
+                    </span>
+
+                    <span class="tracking-section-number">
+                        01
+                    </span>
+
+                </div>
+
+
+                <div class="tracking-progress">
+
+
+                    <!-- PASO 1 -->
+
+                    <div class="tracking-step
+                                @(pasoActual >= 1 ? "completed" : "")">
+
+                        <div class="tracking-step-marker">
+
+                            @if (pasoActual > 1)
+                            {
+                                <span>✓</span>
+                            }
+                            else
+                            {
+                                <span>1</span>
+                            }
+
+                        </div>
+
+                        <div class="tracking-step-text">
+
+                            <strong>
+                                PEDIDO RECIBIDO
+                            </strong>
+
+                            <span>
+                                Recibimos tu compra
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LÍNEA -->
+
+                    <div class="tracking-progress-line
+                                @(pasoActual >= 2 ? "completed" : "")">
+                    </div>
+
+
+                    <!-- PASO 2 -->
+
+                    <div class="tracking-step
+                                @(pasoActual >= 2 ? "completed" : "")">
+
+                        <div class="tracking-step-marker">
+
+                            @if (pasoActual > 2)
+                            {
+                                <span>✓</span>
+                            }
+                            else
+                            {
+                                <span>2</span>
+                            }
+
+                        </div>
+
+                        <div class="tracking-step-text">
+
+                            <strong>
+                                PAGO CONFIRMADO
+                            </strong>
+
+                            <span>
+                                Transferencia verificada
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LÍNEA -->
+
+                    <div class="tracking-progress-line
+                                @(pasoActual >= 3 ? "completed" : "")">
+                    </div>
+
+
+                    <!-- PASO 3 -->
+
+                    <div class="tracking-step
+                                @(pasoActual >= 3 ? "completed" : "")">
+
+                        <div class="tracking-step-marker">
+
+                            @if (pasoActual > 3)
+                            {
+                                <span>✓</span>
+                            }
+                            else
+                            {
+                                <span>3</span>
+                            }
+
+                        </div>
+
+                        <div class="tracking-step-text">
+
+                            <strong>
+                                EN PREPARACIÓN
+                            </strong>
+
+                            <span>
+                                Estamos preparando tu pedido
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LÍNEA -->
+
+                    <div class="tracking-progress-line
+                                @(pasoActual >= 4 ? "completed" : "")">
+                    </div>
+
+
+                    <!-- PASO 4 -->
+
+                    <div class="tracking-step
+                                @(pasoActual >= 4 ? "completed" : "")">
+
+                        <div class="tracking-step-marker">
+
+                            @if (pasoActual >= 4)
+                            {
+                                <span>✓</span>
+                            }
+                            else
+                            {
+                                <span>4</span>
+                            }
+
+                        </div>
+
+                        <div class="tracking-step-text">
+
+                            <strong>
+                                ENTREGADO
+                            </strong>
+
+                            <span>
+                                Pedido finalizado
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+        }
+
+
+        <!-- =========================================
+             CONTENIDO INFERIOR
+        ========================================== -->
+
+        <div class="tracking-detail-grid">
+
+
+            <!-- =====================================
+                 PRODUCTOS
+            ====================================== -->
+
+            <section class="tracking-order-card">
+
+                <div class="tracking-section-heading">
+
+                    <span>
+                        TU PEDIDO
+                    </span>
+
+                    <span class="tracking-section-number">
+                        02
+                    </span>
+
+                </div>
+
+
+                <div class="tracking-products">
+
+                    @foreach (var detalle in Model.Detalles)
+                    {
+                        <article class="tracking-product">
+
+                            <div class="tracking-product-main">
+
+                                <div class="tracking-product-name">
+
+                                    <h3>
+                                        @detalle.NombreProducto
+                                    </h3>
+
+                                    <span>
+                                        CANTIDAD @detalle.Cantidad
+                                    </span>
+
+                                </div>
+
+
+                                <!-- OPCIONES ELEGIDAS -->
+
+                                @if (
+                                    !string.IsNullOrWhiteSpace(detalle.Color) ||
+                                    !string.IsNullOrWhiteSpace(detalle.Especialidad) ||
+                                    !string.IsNullOrWhiteSpace(detalle.Jerarquia) ||
+                                    !string.IsNullOrWhiteSpace(detalle.JerarquiaAspirantes) ||
+                                    !string.IsNullOrWhiteSpace(detalle.ConGanchito) ||
+                                    !string.IsNullOrWhiteSpace(detalle.ConNombre) ||
+                                    !string.IsNullOrWhiteSpace(detalle.NombreApellido) ||
+                                    !string.IsNullOrWhiteSpace(detalle.Inicial) ||
+                                    !string.IsNullOrWhiteSpace(detalle.Apellido) ||
+                                    !string.IsNullOrWhiteSpace(detalle.NombrePersonalizado)
+                                )
+                                {
+                                    <div class="tracking-product-options">
+
+                                        @if (!string.IsNullOrWhiteSpace(detalle.Color))
+                                        {
+                                            <span>
+                                                Color:
+                                                <strong>@detalle.Color</strong>
+                                            </span>
+                                        }
+
+                                        @if (!string.IsNullOrWhiteSpace(detalle.Especialidad))
+                                        {
+                                            <span>
+                                                Especialidad:
+                                                <strong>@detalle.Especialidad</strong>
+                                            </span>
+                                        }
+
+                                        @if (!string.IsNullOrWhiteSpace(detalle.Jerarquia))
+                                        {
+                                            <span>
+                                                Jerarquía:
+                                                <strong>@detalle.Jerarquia</strong>
+                                            </span>
+                                        }
+
+                                        @if (!string.IsNullOrWhiteSpace(detalle.JerarquiaAspirantes))
+                                        {
+                                            <span>
+                                                Jerarquía aspirante:
+                                                <strong>@detalle.JerarquiaAspirantes</strong>
+                                            </span>
+                                        }
+
+                                        @if (!string.IsNullOrWhiteSpace(detalle.ConGanchito))
+                                        {
+                                            <span>
+                                                Ganchito:
+                                                <strong>@detalle.ConGanchito</strong>
+                                            </span>
+                                        }
+
+                                        @if (!string.IsNullOrWhiteSpace(detalle.ConNombre))
+                                        {
+                                            <span>
+                                                Con nombre:
+                                                <strong>@detalle.ConNombre</strong>
+                                            </span>
+                                        }
+
+                                        @if (!string.IsNullOrWhiteSpace(detalle.NombreApellido))
+                                        {
+                                            <span>
+                                                Nombre y apellido:
+                                                <strong>@detalle.NombreApellido</strong>
+                                            </span>
+                                        }
+
+                                        @if (!string.IsNullOrWhiteSpace(detalle.Inicial))
+                                        {
+                                            <span>
+                                                Inicial:
+                                                <strong>@detalle.Inicial</strong>
+                                            </span>
+                                        }
+
+                                        @if (!string.IsNullOrWhiteSpace(detalle.Apellido))
+                                        {
+                                            <span>
+                                                Apellido:
+                                                <strong>@detalle.Apellido</strong>
+                                            </span>
+                                        }
+
+                                        @if (!string.IsNullOrWhiteSpace(detalle.NombrePersonalizado))
+                                        {
+                                            <span>
+                                                Nombre:
+                                                <strong>@detalle.NombrePersonalizado</strong>
+                                            </span>
+                                        }
+
+                                    </div>
+                                }
+
+                            </div>
+
+
+                            <div class="tracking-product-price">
+
+                                <span>
+                                    @detalle.Cantidad ×
+                                    $@detalle.PrecioUnitario.ToString("N0")
+                                </span>
+
+                                <strong>
+                                    $@detalle.Subtotal.ToString("N0")
+                                </strong>
+
+                            </div>
+
+                        </article>
+                    }
+
+                </div>
+
+
+                <!-- TOTAL -->
+
+                <div class="tracking-total">
+
+                    <span>
+                        TOTAL
+                    </span>
+
+                    <strong>
+                        $@Model.Total.ToString("N0")
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 DATOS DEL PEDIDO
+            ====================================== -->
+
+            <aside class="tracking-info-card">
+
+                <div class="tracking-section-heading">
+
+                    <span>
+                        INFORMACIÓN
+                    </span>
+
+                    <span class="tracking-section-number">
+                        03
+                    </span>
+
+                </div>
+
+
+                <!-- CLIENTE -->
+
+                <div class="tracking-info-block">
+
+                    <span class="tracking-info-label">
+                        CLIENTE
+                    </span>
+
+                    <strong>
+                        @Model.NombreCliente
+                    </strong>
+
+                </div>
+
+
+                <!-- ENTREGA -->
+
+                <div class="tracking-info-block">
+
+                    <span class="tracking-info-label">
+                        MÉTODO DE ENTREGA
+                    </span>
+
+                    <strong>
+                        @Model.MetodoEnvio
+                    </strong>
+
+                </div>
+
+
+                <!-- DIRECCIÓN -->
+
+                @if (!string.IsNullOrWhiteSpace(Model.Direccion))
+                {
+                    <div class="tracking-info-block">
+
+                        <span class="tracking-info-label">
+                            DIRECCIÓN
+                        </span>
+
+                        <strong>
+                            @Model.Direccion
+                        </strong>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Piso) ||
+                             !string.IsNullOrWhiteSpace(Model.Departamento))
+                        {
+                            <p>
+                                @if (!string.IsNullOrWhiteSpace(Model.Piso))
+                                {
+                                    <span>
+                                        Piso @Model.Piso
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(Model.Departamento))
+                                {
+                                    <span>
+                                        · Depto. @Model.Departamento
+                                    </span>
+                                }
+                            </p>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Barrio))
+                        {
+                            <p>
+                                @Model.Barrio
+                            </p>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Localidad))
+                        {
+                            <p>
+                                @Model.Localidad
+                            </p>
+                        }
+
+                    </div>
+                }
+
+
+                <!-- PAGO -->
+
+                <div class="tracking-info-block">
+
+                    <span class="tracking-info-label">
+                        FORMA DE PAGO
+                    </span>
+
+                    <strong>
+                        @Model.MetodoPago
+                    </strong>
+
+                </div>
+
+
+                <!-- OBSERVACIONES -->
+
+                @if (!string.IsNullOrWhiteSpace(Model.Observaciones))
+                {
+                    <div class="tracking-info-block">
+
+                        <span class="tracking-info-label">
+                            OBSERVACIONES
+                        </span>
+
+                        <p>
+                            @Model.Observaciones
+                        </p>
+
+                    </div>
+                }
+
+            </aside>
+
+        </div>
+
+
+        <!-- =========================================
+             PIE
+        ========================================== -->
+
+        <div class="tracking-detail-footer">
+
+            <a asp-controller="Seguimiento"
+               asp-action="Index"
+               class="tracking-back">
+
+                <span>
+                    ←
+                </span>
+
+                CONSULTAR OTRO PEDIDO
+
+            </a>
+
+
+            <a asp-controller="Productos"
+               asp-action="Index"
+               class="tracking-shop">
+
+                VOLVER A LA TIENDA
+
+                <span>
+                    →
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<style>
+
+    /* =========================================================
+       SEGUIMIENTO DETALLE — NAVY POP
+    ========================================================= */
+
+    .tracking-detail-page {
+        min-height: 75vh;
+
+        padding:
+            75px
+            35px
+            120px;
+
+        background: #f6efe3;
+
+        color: #081f33;
+    }
+
+
+    .tracking-detail-shell {
+        width: 100%;
+        max-width: 1250px;
+
+        margin: 0 auto;
+    }
+
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    .tracking-detail-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+
+        gap: 35px;
+
+        padding-bottom: 35px;
+
+        border-bottom:
+            1px solid
+            rgba(8, 31, 51, .15);
+    }
+
+
+    .tracking-detail-eyebrow {
+        margin:
+            0
+            0
+            16px;
+
+        color: #d2a62c;
+
+        font-size: 9px;
+        font-weight: 800;
+
+        letter-spacing: 2.3px;
+
+        text-transform: uppercase;
+    }
+
+
+    .tracking-detail-header h1 {
+        margin: 0;
+
+        color: #081f33;
+
+        font-size:
+            clamp(
+                52px,
+                7vw,
+                95px
+            );
+
+        font-weight: 800;
+
+        line-height: .88;
+
+        letter-spacing: -5px;
+    }
+
+
+    .tracking-detail-header h1 span {
+        display: inline-block;
+
+        margin-left: 7px;
+
+        color: #d2a62c;
+
+        font-size: .25em;
+
+        vertical-align: top;
+
+        transform:
+            translateY(8px);
+    }
+
+
+    .tracking-detail-date {
+        margin:
+            20px
+            0
+            0;
+
+        color: #71787c;
+
+        font-size: 10px;
+        font-weight: 600;
+
+        letter-spacing: .4px;
+    }
+
+
+    /* =========================================================
+       BADGE ESTADO
+    ========================================================= */
+
+    .tracking-status-badge {
+        flex-shrink: 0;
+
+        padding:
+            12px
+            18px;
+
+        display: flex;
+        align-items: center;
+
+        gap: 8px;
+
+        border:
+            1px solid
+            rgba(8, 31, 51, .16);
+
+        border-radius: 100px;
+
+        background: #fffaf2;
+
+        color: #081f33;
+
+        font-size: 8px;
+        font-weight: 800;
+
+        letter-spacing: 1.2px;
+    }
+
+
+    .tracking-status-dot {
+        width: 7px;
+        height: 7px;
+
+        border-radius: 50%;
+
+        background: #d2a62c;
+    }
+
+
+    .tracking-status-badge.cancelled {
+        opacity: .65;
+    }
+
+
+    .tracking-status-badge.cancelled
+    .tracking-status-dot {
+        background: #081f33;
+    }
+
+
+    /* =========================================================
+       MENSAJE ACTUAL
+    ========================================================= */
+
+    .tracking-current-message {
+        margin-top: 32px;
+
+        padding:
+            22px
+            25px;
+
+        display: flex;
+        align-items: center;
+
+        gap: 16px;
+
+        border-radius: 20px;
+
+        background: #081f33;
+
+        color: #f6efe3;
+    }
+
+
+    .tracking-current-star {
+        color: #d2a62c;
+
+        font-size: 18px;
+    }
+
+
+    .tracking-current-message div {
+        display: flex;
+        align-items: center;
+
+        gap: 18px;
+    }
+
+
+    .tracking-current-label {
+        color: #d2a62c;
+
+        font-size: 7px;
+        font-weight: 800;
+
+        letter-spacing: 1.5px;
+    }
+
+
+    .tracking-current-message p {
+        margin: 0;
+
+        font-size: 13px;
+        font-weight: 650;
+    }
+
+
+    /* =========================================================
+       CANCELADO
+    ========================================================= */
+
+    .tracking-cancelled-message {
+        margin-top: 32px;
+
+        padding: 22px 25px;
+
+        display: flex;
+        align-items: center;
+
+        gap: 16px;
+
+        border:
+            1px solid
+            rgba(8, 31, 51, .15);
+
+        border-radius: 20px;
+
+        background: #fffaf2;
+    }
+
+
+    .tracking-cancelled-icon {
+        width: 38px;
+        height: 38px;
+
+        flex: 0 0 38px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: #081f33;
+
+        color: #f6efe3;
+
+        font-size: 18px;
+    }
+
+
+    .tracking-cancelled-message span {
+        color: #081f33;
+
+        font-size: 8px;
+        font-weight: 800;
+
+        letter-spacing: 1.3px;
+    }
+
+
+    .tracking-cancelled-message p {
+        margin:
+            5px
+            0
+            0;
+
+        color: #747a7e;
+
+        font-size: 11px;
+
+        line-height: 1.5;
+    }
+
+
+    /* =========================================================
+       CARDS
+    ========================================================= */
+
+    .tracking-progress-card,
+    .tracking-order-card,
+    .tracking-info-card {
+        border:
+            1px solid
+            rgba(8, 31, 51, .10);
+
+        border-radius: 27px;
+
+        background: #fffaf2;
+
+        box-shadow:
+            0
+            15px
+            50px
+            rgba(8, 31, 51, .035);
+    }
+
+
+    /* =========================================================
+       HEADING DE CARD
+    ========================================================= */
+
+    .tracking-section-heading {
+        padding-bottom: 17px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        border-bottom:
+            1px solid
+            rgba(8, 31, 51, .10);
+
+        color: #081f33;
+
+        font-size: 8px;
+        font-weight: 800;
+
+        letter-spacing: 1.6px;
+    }
+
+
+    .tracking-section-number {
+        color: #d2a62c;
+
+        font-size: 8px;
+    }
+
+
+    /* =========================================================
+       PROGRESO
+    ========================================================= */
+
+    .tracking-progress-card {
+        margin-top: 22px;
+
+        padding: 28px;
+    }
+
+
+    .tracking-progress {
+        margin-top: 38px;
+
+        display: grid;
+
+        grid-template-columns:
+            auto
+            1fr
+            auto
+            1fr
+            auto
+            1fr
+            auto;
+
+        align-items: start;
+    }
+
+
+    .tracking-step {
+        min-width: 120px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        text-align: center;
+    }
+
+
+    .tracking-step-marker {
+        width: 38px;
+        height: 38px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border:
+            1px solid
+            rgba(8, 31, 51, .18);
+
+        border-radius: 50%;
+
+        background: #f6efe3;
+
+        color: #8c9295;
+
+        font-size: 9px;
+        font-weight: 800;
+
+        transition: .2s ease;
+    }
+
+
+    .tracking-step.completed
+    .tracking-step-marker {
+        border-color: #081f33;
+
+        background: #081f33;
+
+        color: #f6efe3;
+    }
+
+
+    .tracking-step-text {
+        margin-top: 13px;
+
+        display: flex;
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+
+    .tracking-step-text strong {
+        color: #8a8f92;
+
+        font-size: 7px;
+        font-weight: 800;
+
+        letter-spacing: .8px;
+    }
+
+
+    .tracking-step.completed
+    .tracking-step-text strong {
+        color: #081f33;
+    }
+
+
+    .tracking-step-text span {
+        max-width: 125px;
+
+        color: #9a9ea0;
+
+        font-size: 8px;
+
+        line-height: 1.4;
+    }
+
+
+    .tracking-progress-line {
+        height: 1px;
+
+        margin-top: 19px;
+
+        background:
+            rgba(8, 31, 51, .15);
+    }
+
+
+    .tracking-progress-line.completed {
+        height: 2px;
+
+        background: #d2a62c;
+    }
+
+
+    /* =========================================================
+       GRID INFERIOR
+    ========================================================= */
+
+    .tracking-detail-grid {
+        margin-top: 22px;
+
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1.6fr)
+            minmax(280px, .7fr);
+
+        gap: 22px;
+
+        align-items: start;
+    }
+
+
+    /* =========================================================
+       PRODUCTOS
+    ========================================================= */
+
+    .tracking-order-card {
+        padding: 28px;
+    }
+
+
+    .tracking-products {
+        display: flex;
+        flex-direction: column;
+    }
+
+
+    .tracking-product {
+        padding:
+            25px
+            0;
+
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        gap: 30px;
+
+        border-bottom:
+            1px solid
+            rgba(8, 31, 51, .09);
+    }
+
+
+    .tracking-product-main {
+        min-width: 0;
+
+        flex: 1;
+    }
+
+
+    .tracking-product-name {
+        display: flex;
+        align-items: center;
+
+        gap: 12px;
+
+        flex-wrap: wrap;
+    }
+
+
+    .tracking-product-name h3 {
+        margin: 0;
+
+        color: #081f33;
+
+        font-size: 17px;
+        font-weight: 750;
+
+        letter-spacing: -.4px;
+    }
+
+
+    .tracking-product-name > span {
+        padding:
+            6px
+            9px;
+
+        border-radius: 100px;
+
+        background: #f6efe3;
+
+        color: #747a7e;
+
+        font-size: 6px;
+        font-weight: 800;
+
+        letter-spacing: .9px;
+    }
+
+
+    /* OPCIONES */
+
+    .tracking-product-options {
+        margin-top: 13px;
+
+        display: flex;
+        flex-wrap: wrap;
+
+        gap:
+            6px
+            15px;
+    }
+
+
+    .tracking-product-options > span {
+        color: #858a8d;
+
+        font-size: 9px;
+
+        line-height: 1.5;
+    }
+
+
+    .tracking-product-options strong {
+        color: #081f33;
+
+        font-weight: 650;
+    }
+
+
+    /* PRECIO */
+
+    .tracking-product-price {
+        flex-shrink: 0;
+
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        gap: 5px;
+    }
+
+
+    .tracking-product-price span {
+        color: #8a8f92;
+
+        font-size: 8px;
+    }
+
+
+    .tracking-product-price strong {
+        color: #081f33;
+
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+
+    /* TOTAL */
+
+    .tracking-total {
+        padding-top: 25px;
+
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+
+        gap: 20px;
+    }
+
+
+    .tracking-total > span {
+        color: #081f33;
+
+        font-size: 8px;
+        font-weight: 800;
+
+        letter-spacing: 1.5px;
+    }
+
+
+    .tracking-total strong {
+        color: #081f33;
+
+        font-size: 29px;
+        font-weight: 800;
+
+        letter-spacing: -1.3px;
+    }
+
+
+    /* =========================================================
+       INFORMACIÓN
+    ========================================================= */
+
+    .tracking-info-card {
+        padding: 28px;
+    }
+
+
+    .tracking-info-block {
+        padding:
+            20px
+            0;
+
+        border-bottom:
+            1px solid
+            rgba(8, 31, 51, .09);
+    }
+
+
+    .tracking-info-block:last-child {
+        padding-bottom: 0;
+
+        border-bottom: 0;
+    }
+
+
+    .tracking-info-label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        color: #9a9da0;
+
+        font-size: 7px;
+        font-weight: 800;
+
+        letter-spacing: 1.2px;
+    }
+
+
+    .tracking-info-block strong {
+        display: block;
+
+        color: #081f33;
+
+        font-size: 11px;
+        font-weight: 700;
+
+        line-height: 1.5;
+    }
+
+
+    .tracking-info-block p {
+        margin:
+            4px
+            0
+            0;
+
+        color: #767c7f;
+
+        font-size: 9px;
+
+        line-height: 1.55;
+    }
+
+
+    /* =========================================================
+       FOOTER DE LA VISTA
+    ========================================================= */
+
+    .tracking-detail-footer {
+        margin-top: 30px;
+
+        padding-top: 25px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 20px;
+
+        border-top:
+            1px solid
+            rgba(8, 31, 51, .13);
+    }
+
+
+    .tracking-back,
+    .tracking-shop {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 9px;
+
+        color: #081f33;
+
+        font-size: 8px;
+        font-weight: 800;
+
+        letter-spacing: 1.1px;
+
+        text-decoration: none;
+
+        transition:
+            color .2s ease,
+            transform .2s ease;
+    }
+
+
+    .tracking-back:hover,
+    .tracking-shop:hover {
+        color: #d2a62c;
+    }
+
+
+    .tracking-back:hover {
+        transform:
+            translateX(-3px);
+    }
+
+
+    .tracking-shop:hover {
+        transform:
+            translateX(3px);
+    }
+
+
+    /* =========================================================
+       TABLET
+    ========================================================= */
+
+    @@media (max-width: 900px) {
+
+        .tracking-detail-grid {
+            grid-template-columns: 1fr;
+        }
+
+
+        .tracking-progress {
+            grid-template-columns:
+                auto
+                1fr
+                auto
+                1fr
+                auto
+                1fr
+                auto;
+        }
+
+
+        .tracking-step {
+            min-width: 80px;
+        }
+
+
+        .tracking-step-text span {
+            display: none;
+        }
+
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @@media (max-width: 650px) {
+
+        .tracking-detail-page {
+            padding:
+                55px
+                17px
+                85px;
+        }
+
+
+        /* HEADER */
+
+        .tracking-detail-header {
+            align-items: flex-start;
+            flex-direction: column;
+
+            gap: 22px;
+        }
+
+
+        .tracking-detail-header h1 {
+            font-size: 52px;
+
+            letter-spacing: -3px;
+        }
+
+
+        .tracking-status-badge {
+            padding:
+                10px
+                14px;
+        }
+
+
+        /* ESTADO */
+
+        .tracking-current-message {
+            align-items: flex-start;
+
+            padding:
+                19px
+                18px;
+        }
+
+
+        .tracking-current-message div {
+            align-items: flex-start;
+            flex-direction: column;
+
+            gap: 5px;
+        }
+
+
+        /* PROGRESO VERTICAL */
+
+        .tracking-progress-card {
+            padding:
+                24px
+                20px;
+        }
+
+
+        .tracking-progress {
+            margin-top: 27px;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 0;
+        }
+
+
+        .tracking-step {
+            min-width: 0;
+
+            width: 100%;
+
+            flex-direction: row;
+            align-items: center;
+
+            gap: 15px;
+
+            text-align: left;
+        }
+
+
+        .tracking-step-marker {
+            flex:
+                0
+                0
+                36px;
+
+            width: 36px;
+            height: 36px;
+        }
+
+
+        .tracking-step-text {
+            margin: 0;
+
+            align-items: flex-start;
+        }
+
+
+        .tracking-step-text span {
+            display: block;
+
+            max-width: none;
+        }
+
+
+        .tracking-progress-line {
+            width: 1px;
+            height: 25px;
+
+            margin:
+                0
+                0
+                0
+                18px;
+        }
+
+
+        .tracking-progress-line.completed {
+            width: 2px;
+            height: 25px;
+        }
+
+
+        /* CARDS */
+
+        .tracking-order-card,
+        .tracking-info-card {
+            padding:
+                24px
+                20px;
+        }
+
+
+        .tracking-product {
+            flex-direction: column;
+
+            gap: 15px;
+        }
+
+
+        .tracking-product-price {
+            width: 100%;
+
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+
+        .tracking-total strong {
+            font-size: 25px;
+        }
+
+
+        /* FOOTER */
+
+        .tracking-detail-footer {
+            align-items: flex-start;
+            flex-direction: column;
+
+            gap: 18px;
+        }
+
+    }
+
+</style>

@@ -1,0 +1,123 @@
+@model List<TiendaNaval.Models.Producto>
+
+@{
+    ViewData["Title"] = "Administración";
+}
+
+<section class="admin-page">
+
+    <div class="admin-top">
+
+        <div>
+            <p class="admin-eyebrow">ADMINISTRACIÓN</p>
+            <h1>Productos</h1>
+        </div>
+
+        <div class="admin-actions">
+
+            <a asp-controller="Admin"
+               asp-action="Crear"
+               class="admin-btn admin-btn-dark">
+                + Agregar producto
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Categorias"
+               class="admin-btn">
+                Categorías
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Pedidos"
+               class="admin-btn">
+                Pedidos
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-table-wrapper">
+
+        <table class="admin-table">
+
+            <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Destacado</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            @foreach (var producto in Model)
+            {
+                <tr>
+
+                    <td>
+                        <div class="admin-product">
+
+                            @if (!string.IsNullOrEmpty(producto.ImagenUrl))
+                            {
+                                <img src="@producto.ImagenUrl"
+                                     alt="@producto.Nombre"/>
+                            }
+
+                            <span>@producto.Nombre</span>
+
+                        </div>
+                    </td>
+
+                    <td>
+                        @(producto.Categoria?.Nombre ?? "-")
+                    </td>
+
+                    <td>
+                        $@producto.Precio.ToString("N0")
+                    </td>
+
+                    <td>
+                        @producto.Stock
+                    </td>
+
+                    <td>
+                        @(producto.Destacado ? "Sí" : "No")
+                    </td>
+
+                    <td class="admin-row-actions">
+
+                        <a asp-controller="Admin"
+                           asp-action="Editar"
+                           asp-route-id="@producto.Id">
+                            Editar
+                        </a>
+
+                        <form asp-controller="Admin"
+                              asp-action="Eliminar"
+                              asp-route-id="@producto.Id"
+                              method="post"
+                              onsubmit="return confirm('¿Eliminar este producto?');">
+
+                            <button type="submit">
+                                Eliminar
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+            }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>

@@ -1,0 +1,368 @@
+@model List<TiendaNaval.Models.CarritoItem>
+
+<div id="cartOverlay"
+     class="cart-overlay"
+     onclick="cerrarCarrito()">
+</div>
+
+<aside id="cartDrawer"
+       class="cart-drawer">
+
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
+
+    <div class="cart-drawer-header">
+
+        <div class="cart-drawer-heading">
+
+            <p class="cart-drawer-label">
+                VYR / COLECCIÓN NAVAL
+            </p>
+
+            <h2>
+                Tu carrito<span>.</span>
+            </h2>
+
+        </div>
+
+        <button type="button"
+                class="cart-drawer-close"
+                aria-label="Cerrar carrito"
+                onclick="cerrarCarrito()">
+            ×
+        </button>
+
+    </div>
+
+
+    <!-- ==========================================
+         CONTENIDO
+    =========================================== -->
+
+    <div class="cart-drawer-body">
+
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <article class="cart-drawer-item">
+
+                    <!-- IMAGEN -->
+
+                    <div class="cart-drawer-image">
+
+                        @if (!string.IsNullOrWhiteSpace(item.ImagenUrl))
+                        {
+                            <img src="@item.ImagenUrl"
+                                 alt="@item.Nombre" />
+                        }
+                        else
+                        {
+                            <span>
+                                VYR
+                            </span>
+                        }
+
+                    </div>
+
+
+                    <!-- INFORMACIÓN -->
+
+                    <div class="cart-drawer-product-info">
+
+                        <div class="cart-drawer-product-top">
+
+                            <div class="cart-drawer-product-data">
+
+                                <p class="cart-drawer-collection">
+                                    COLECCIÓN NAVAL
+                                </p>
+
+                                <h3>
+                                    @item.Nombre
+                                </h3>
+
+                                <p class="cart-drawer-price">
+                                    $@item.Precio.ToString("N0")
+                                </p>
+
+                            </div>
+
+
+                            <!-- ELIMINAR -->
+
+                            <button type="button"
+                                    class="cart-remove"
+                                    aria-label="Eliminar producto"
+                                    onclick="eliminarDelCarrito(@item.ProductoId)">
+                                ×
+                            </button>
+
+                        </div>
+
+
+                        <!-- ==========================================
+                             OPCIONES DEL PRODUCTO
+                        =========================================== -->
+
+                        @if (
+                            !string.IsNullOrWhiteSpace(item.Color) ||
+                            !string.IsNullOrWhiteSpace(item.Especialidad) ||
+                            !string.IsNullOrWhiteSpace(item.Jerarquia) ||
+                            !string.IsNullOrWhiteSpace(item.JerarquiaAspirantes) ||
+                            !string.IsNullOrWhiteSpace(item.ConGanchito) ||
+                            !string.IsNullOrWhiteSpace(item.ConNombre) ||
+                            !string.IsNullOrWhiteSpace(item.NombreApellido) ||
+                            !string.IsNullOrWhiteSpace(item.Inicial) ||
+                            !string.IsNullOrWhiteSpace(item.Apellido) ||
+                            !string.IsNullOrWhiteSpace(item.NombrePersonalizado)
+                        )
+                        {
+                            <div class="cart-drawer-options">
+
+                                @if (!string.IsNullOrWhiteSpace(item.Color))
+                                {
+                                    <span>
+                                        COLOR · @item.Color
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(item.Especialidad))
+                                {
+                                    <span>
+                                        ESPECIALIDAD · @item.Especialidad
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(item.Jerarquia))
+                                {
+                                    <span>
+                                        JERARQUÍA · @item.Jerarquia
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(item.JerarquiaAspirantes))
+                                {
+                                    <span>
+                                        ASPIRANTE · @item.JerarquiaAspirantes
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(item.ConGanchito))
+                                {
+                                    <span>
+                                        GANCHO · @item.ConGanchito
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(item.ConNombre))
+                                {
+                                    <span>
+                                        CON NOMBRE · @item.ConNombre
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(item.NombreApellido))
+                                {
+                                    <span>
+                                        NOMBRE · @item.NombreApellido
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(item.Inicial))
+                                {
+                                    <span>
+                                        INICIAL · @item.Inicial
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(item.Apellido))
+                                {
+                                    <span>
+                                        APELLIDO · @item.Apellido
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(item.NombrePersonalizado))
+                                {
+                                    <span>
+                                        PERSONALIZADO · @item.NombrePersonalizado
+                                    </span>
+                                }
+
+                            </div>
+                        }
+
+
+                        <!-- ==========================================
+                             CANTIDAD + SUBTOTAL
+                        =========================================== -->
+
+                        <div class="cart-drawer-product-bottom">
+
+                            <div class="drawer-quantity">
+
+                                <button type="button"
+                                        aria-label="Restar cantidad"
+                                        onclick="cambiarCantidad(
+                                            @item.ProductoId,
+                                            @(item.Cantidad - 1)
+                                        )">
+                                    −
+                                </button>
+
+                                <span>
+                                    @item.Cantidad
+                                </span>
+
+                                <button type="button"
+                                        aria-label="Sumar cantidad"
+                                        onclick="cambiarCantidad(
+                                            @item.ProductoId,
+                                            @(item.Cantidad + 1)
+                                        )">
+                                    +
+                                </button>
+
+                            </div>
+
+
+                            <div class="cart-drawer-item-total">
+
+                                <small>
+                                    SUBTOTAL
+                                </small>
+
+                                <strong class="cart-drawer-subtotal">
+                                    $@item.Subtotal.ToString("N0")
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+            }
+        }
+        else
+        {
+            <!-- ==========================================
+                 CARRITO VACÍO
+            =========================================== -->
+
+            <div class="cart-drawer-empty">
+
+                <div class="cart-drawer-empty-logo">
+                    VYR
+                </div>
+
+                <p class="cart-drawer-label">
+                    TU CARRITO
+                </p>
+
+                <h3>
+                    Está vacío<span>.</span>
+                </h3>
+
+                <p class="cart-drawer-empty-text">
+                    Descubrí nuestros productos
+                    y agregá tus favoritos.
+                </p>
+
+                <button type="button"
+                        onclick="cerrarCarrito()">
+
+                    <span>
+                        SEGUIR COMPRANDO
+                    </span>
+
+                    <span>
+                        →
+                    </span>
+
+                </button>
+
+            </div>
+        }
+
+    </div>
+
+
+    <!-- ==========================================
+         FOOTER
+    =========================================== -->
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="cart-drawer-footer">
+
+            <div class="cart-drawer-footer-top">
+
+                <p>
+                    RESUMEN
+                </p>
+
+                <span>
+                    @Model.Sum(x => x.Cantidad)
+                    @(Model.Sum(x => x.Cantidad) == 1
+                        ? "PRODUCTO"
+                        : "PRODUCTOS")
+                </span>
+
+            </div>
+
+
+            <div class="cart-total">
+
+                <span>
+                    TOTAL
+                </span>
+
+                <strong>
+                    $@Model.Sum(x => x.Subtotal).ToString("N0")
+                </strong>
+
+            </div>
+
+
+            <a asp-controller="Checkout"
+               asp-action="Index"
+               class="cart-checkout-button">
+
+                <span>
+                    FINALIZAR COMPRA
+                </span>
+
+                <span class="cart-checkout-arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <button type="button"
+                    class="cart-continue-button"
+                    onclick="cerrarCarrito()">
+
+                ← SEGUIR COMPRANDO
+
+            </button>
+
+
+            <div class="cart-payment-note">
+
+                <span></span>
+
+                <p>
+                    Pago mediante transferencia bancaria.
+                </p>
+
+            </div>
+
+        </div>
+    }
+
+</aside>

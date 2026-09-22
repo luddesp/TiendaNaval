@@ -1,0 +1,2141 @@
+@{
+    var titulo = ViewData["Title"] ?? "VyR";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>@titulo - VyR</title>
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <style>
+
+        :root {
+            --fondo: #f7f5f1;
+            --blanco: #ffffff;
+            --texto: #161616;
+            --gris: #777777;
+            --borde: #dedbd5;
+            --naval: #0d2340;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: var(--fondo);
+            color: var(--texto);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        <style>
+
+             /* ============================================================
+                VARIABLES GENERALES — VYR NAVY POP
+             ============================================================ */
+
+         :root {
+             --fondo: #f7f5f1;
+             --blanco: #ffffff;
+             --texto: #161616;
+             --gris: #777777;
+             --borde: #dedbd5;
+
+             --vyr-navy: #081f33;
+             --vyr-navy-2: #0d2b44;
+             --vyr-cream: #f6efe3;
+             --vyr-cream-light: #fffaf2;
+             --vyr-gold: #d2a62c;
+             --vyr-sky: #b8d4df;
+         }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: var(--fondo);
+
+            color: var(--texto);
+        }
+
+
+        a {
+            color: inherit;
+
+            text-decoration: none;
+        }
+
+
+        /* ============================================================
+           BARRA SUPERIOR — NAVY
+        ============================================================ */
+
+        .top-bar {
+            position: relative;
+
+            padding:
+                9px
+                20px;
+
+            background: var(--vyr-navy);
+
+            color:
+                rgba(
+                    246,
+                    239,
+                    227,
+                    .82
+                );
+
+            text-align: center;
+
+            font-size: 10px;
+            font-weight: 600;
+
+            letter-spacing: 1.8px;
+
+            text-transform: uppercase;
+
+            border-bottom:
+                1px solid
+                rgba(246,239,227,.10);
+        }
+
+
+        .top-bar::before {
+            content: "✦";
+
+            margin-right: 9px;
+
+            color: var(--vyr-gold);
+
+            font-size: 8px;
+        }
+
+
+        .top-bar::after {
+            content: "✦";
+
+            margin-left: 9px;
+
+            color: var(--vyr-gold);
+
+            font-size: 8px;
+        }
+
+
+        /* ============================================================
+           HEADER
+        ============================================================ */
+
+        .main-header {
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            background:
+                rgba(
+                    246,
+                    239,
+                    227,
+                    .97
+                );
+
+            border-bottom:
+                1px solid
+                rgba(8,31,51,.12);
+
+            backdrop-filter:
+                blur(14px);
+
+            -webkit-backdrop-filter:
+                blur(14px);
+        }
+
+
+        /* ============================================================
+           NAVBAR
+        ============================================================ */
+
+        .navbar-custom {
+            position: relative;
+
+            max-width: 1500px;
+
+            height: 88px;
+
+            margin: 0 auto;
+
+            padding:
+                0
+                38px;
+
+            display: grid;
+
+            grid-template-columns:
+            1fr
+            auto
+            1fr;
+
+            align-items: center;
+        }
+
+
+        /* ============================================================
+           MENÚ IZQUIERDO
+        ============================================================ */
+
+        .nav-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 30px;
+        }
+
+
+        .nav-link-custom {
+            position: relative;
+
+            padding:
+                8px
+                0;
+
+            color: var(--vyr-navy);
+
+            font-size: 11px;
+            font-weight: 600;
+
+            letter-spacing: 1.3px;
+
+            text-transform: uppercase;
+
+            transition:
+                color .2s ease;
+        }
+
+
+        .nav-link-custom::after {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            bottom: 2px;
+
+            width: 0;
+            height: 2px;
+
+            border-radius: 100px;
+
+            background: var(--vyr-gold);
+
+            transition:
+                width .25s ease;
+        }
+
+
+        .nav-link-custom:hover {
+            color: var(--vyr-navy);
+        }
+
+
+        .nav-link-custom:hover::after {
+            width: 100%;
+        }
+
+
+        /* ============================================================
+           LOGO VYR
+        ============================================================ */
+
+        .brand {
+            position: relative;
+
+            display: block;
+
+            color: var(--vyr-navy);
+
+            text-align: center;
+
+            font-size: 28px;
+            font-weight: 800;
+
+            letter-spacing: 5px;
+
+            line-height: 1;
+
+            text-transform: uppercase;
+
+            white-space: nowrap;
+
+            transition:
+                transform .2s ease;
+        }
+
+
+        .brand:hover {
+            transform:
+                translateY(-1px);
+        }
+
+
+        .brand-subtitle {
+            display: block;
+
+            margin-top: 8px;
+
+            color: #6f777b;
+
+            font-size: 7px;
+            font-weight: 700;
+
+            letter-spacing: 3.5px;
+
+            text-transform: uppercase;
+        }
+
+
+        .brand::after {
+            content: "✦";
+
+            position: absolute;
+
+            top: 50%;
+            right: -21px;
+
+            color: var(--vyr-gold);
+
+            font-size: 8px;
+
+            transform:
+                translateY(-50%)
+                rotate(10deg);
+        }
+
+
+        /* ============================================================
+           MENÚ DERECHO
+        ============================================================ */
+
+        .nav-right {
+            display: flex;
+
+            justify-content: flex-end;
+
+            align-items: center;
+
+            gap: 27px;
+        }
+
+
+        .nav-icon-link,
+        .header-search-btn,
+        .header-cart-button {
+            position: relative;
+
+            padding:
+                8px
+                0;
+
+            border: 0;
+
+            background: transparent;
+
+            color: var(--vyr-navy);
+
+            font-family: inherit;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            letter-spacing: 1.2px;
+
+            text-transform: uppercase;
+
+            cursor: pointer;
+
+            transition:
+                color .2s ease;
+        }
+
+
+        .nav-icon-link::after,
+        .header-search-btn::after,
+        .header-cart-button::after {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            bottom: 2px;
+
+            width: 0;
+            height: 2px;
+
+            border-radius: 100px;
+
+            background: var(--vyr-gold);
+
+            transition:
+                width .25s ease;
+        }
+
+
+        .nav-icon-link:hover::after,
+        .header-search-btn:hover::after,
+        .header-cart-button:hover::after {
+            width: 100%;
+        }
+
+
+        /* ============================================================
+           CARRITO — CONTADOR DORADO
+        ============================================================ */
+
+        .cart-count {
+            position: absolute;
+
+            top: -7px;
+            right: -17px;
+
+            width: 19px;
+            height: 19px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: var(--vyr-gold);
+
+            color: var(--vyr-navy);
+
+            font-size: 9px;
+            font-weight: 800;
+
+            letter-spacing: 0;
+
+            box-shadow:
+                0 0 0 3px
+                var(--vyr-cream);
+        }
+
+
+        /* ============================================================
+           CONTENIDO
+        ============================================================ */
+
+        .page-content {
+            min-height: 70vh;
+        }
+
+
+        /* ============================================================
+           FOOTER — VYR NAVY POP
+        ============================================================ */
+
+        .footer {
+            --footer-navy: #081f33;
+            --footer-navy-light: #102d44;
+            --footer-cream: #f6efe3;
+            --footer-gold: #d2a62c;
+            --footer-sky: #b8d4df;
+
+            position: relative;
+
+            margin-top: 90px;
+
+            padding:
+                70px 40px
+                25px;
+
+            overflow: hidden;
+
+            background:
+                var(--footer-navy);
+
+            color:
+                var(--footer-cream);
+
+            border-top: 0;
+        }
+
+
+        /* LÍNEA DORADA SUPERIOR */
+
+        .footer::before {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: 40px;
+            right: 40px;
+
+            height: 3px;
+
+            border-radius: 100px;
+
+            background:
+                var(--footer-gold);
+        }
+
+
+        /* ============================================================
+           CONTENIDO FOOTER
+        ============================================================ */
+
+        .footer-inner {
+            width: 100%;
+
+            max-width: 1450px;
+
+            margin:
+                0 auto;
+
+            padding: 0;
+
+            display: grid;
+
+            grid-template-columns:
+            1.7fr
+            .75fr
+            .85fr
+            .85fr
+            .75fr;
+
+            gap: 55px;
+        }
+
+
+        /* ============================================================
+           MARCA FOOTER
+        ============================================================ */
+
+        .footer-main {
+            max-width: 380px;
+        }
+
+
+        .footer-eyebrow {
+            margin:
+                0 0
+                16px;
+
+            color:
+                var(--footer-sky);
+
+            font-size: 8px;
+            font-weight: 700;
+
+            letter-spacing: 2.4px;
+
+            text-transform: uppercase;
+        }
+
+
+        .footer-brand {
+            margin: 0;
+
+            color:
+                var(--footer-cream);
+
+            font-size: 55px;
+
+            line-height: .9;
+
+            font-weight: 700;
+
+            letter-spacing: -3px;
+
+            text-transform: uppercase;
+        }
+
+
+        .footer-star {
+            display: inline-block;
+
+            margin-left: 8px;
+
+            color:
+                var(--footer-gold);
+
+            font-size: 17px;
+
+            vertical-align: top;
+
+            transform:
+                rotate(10deg);
+        }
+
+
+        .footer-slogan {
+            margin:
+                20px 0
+                0;
+
+            color:
+                rgba(
+                    246,
+                    239,
+                    227,
+                    .72
+                );
+
+            font-size: 15px;
+
+            line-height: 1.5;
+        }
+
+
+        /* ============================================================
+           COLUMNAS FOOTER
+        ============================================================ */
+
+        .footer-column {
+            padding-top: 4px;
+        }
+
+
+        .footer-title {
+            margin-bottom: 20px;
+
+            color:
+                var(--footer-gold);
+
+            font-size: 9px;
+            font-weight: 700;
+
+            letter-spacing: 1.8px;
+
+            text-transform: uppercase;
+        }
+
+
+        /* ============================================================
+           LINKS FOOTER
+        ============================================================ */
+
+        .footer-links {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 12px;
+        }
+
+
+        .footer-links a {
+            position: relative;
+
+            width: fit-content;
+
+            color:
+                rgba(
+                    246,
+                    239,
+                    227,
+                    .75
+                );
+
+            font-size: 12px;
+
+            font-weight: 400;
+
+            line-height: 1.4;
+
+            text-decoration: none;
+
+            transition:
+                color .2s ease,
+                transform .2s ease;
+        }
+
+
+        .footer-links a:hover {
+            color:
+                var(--footer-cream);
+
+            transform:
+                translateX(4px);
+        }
+
+
+        .footer-links a::before {
+            content: "";
+
+            position: absolute;
+
+            left: -11px;
+            top: 50%;
+
+            width: 4px;
+            height: 4px;
+
+            border-radius: 50%;
+
+            background:
+                var(--footer-gold);
+
+            opacity: 0;
+
+            transform:
+                translateY(-50%)
+                scale(0);
+
+            transition:
+                opacity .2s ease,
+                transform .2s ease;
+        }
+
+
+        .footer-links a:hover::before {
+            opacity: 1;
+
+            transform:
+                translateY(-50%)
+                scale(1);
+        }
+
+
+        /* ============================================================
+           PARTE INFERIOR FOOTER
+        ============================================================ */
+
+        .footer-bottom {
+            width: 100%;
+
+            max-width: 1450px;
+
+            margin:
+                65px auto
+                0;
+
+            padding:
+                22px 0
+                0;
+
+            display: grid;
+
+            grid-template-columns:
+            1fr
+            auto
+            1fr;
+
+            align-items: center;
+
+            gap: 30px;
+
+            border-top:
+                1px solid
+                rgba(
+                    246,
+                    239,
+                    227,
+                    .15
+                );
+        }
+
+
+        .footer-bottom span {
+            color:
+                rgba(
+                    246,
+                    239,
+                    227,
+                    .55
+                );
+
+            font-size: 8px;
+            font-weight: 600;
+
+            letter-spacing: 1.3px;
+
+            text-transform: uppercase;
+        }
+
+
+        .footer-bottom-center {
+            color:
+                var(--footer-gold) !important;
+
+            letter-spacing:
+                2px !important;
+        }
+
+
+        .footer-bottom span:last-child {
+            text-align: right;
+        }
+
+
+        /* ============================================================
+           RESPONSIVE HEADER
+        ============================================================ */
+
+        @@media (max-width: 900px) {
+
+            .navbar-custom {
+                height: 75px;
+
+                padding:
+                    0
+                    22px;
+
+                grid-template-columns:
+                1fr
+                auto;
+            }
+
+
+            .nav-left {
+                display: none;
+            }
+
+
+            .brand {
+                text-align: left;
+
+                font-size: 23px;
+            }
+
+
+            .brand::after {
+                display: none;
+            }
+
+
+            .nav-right {
+                gap: 18px;
+            }
+
+        }
+
+
+        @@media (max-width: 600px) {
+
+            .top-bar {
+                padding:
+                    8px
+                    12px;
+
+                font-size: 8px;
+
+                letter-spacing: 1.1px;
+            }
+
+
+            .brand-subtitle {
+                display: none;
+            }
+
+
+            .nav-right .hide-mobile {
+                display: none;
+            }
+
+
+            .nav-icon-link,
+            .header-search-btn,
+            .header-cart-button {
+                font-size: 9px;
+            }
+
+        }
+
+
+        /* ============================================================
+           RESPONSIVE FOOTER
+        ============================================================ */
+
+        @@media (max-width: 1100px) {
+
+            .footer-inner {
+                grid-template-columns:
+                1.5fr
+                repeat(2, 1fr);
+
+                row-gap: 50px;
+            }
+
+        }
+
+
+        @@media (max-width: 700px) {
+
+            .footer {
+                padding:
+                    60px 22px
+                    25px;
+            }
+
+
+            .footer::before {
+                left: 22px;
+                right: 22px;
+            }
+
+
+            .footer-inner {
+                grid-template-columns:
+                repeat(2, 1fr);
+
+                gap:
+                    45px
+                    25px;
+            }
+
+
+            .footer-main {
+                grid-column:
+                    1 / -1;
+            }
+
+
+            .footer-brand {
+                font-size: 48px;
+            }
+
+
+            .footer-bottom {
+                margin-top: 50px;
+
+                grid-template-columns: 1fr;
+
+                gap: 12px;
+            }
+
+
+            .footer-bottom-center {
+                text-align: left;
+            }
+
+
+            .footer-bottom span:last-child {
+                text-align: left;
+            }
+        }
+             
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+AVISO SUPERIOR
+========================= -->
+
+<div class="top-bar">
+
+    Envíos disponibles ·
+    Pago mediante transferencia bancaria
+
+</div>
+
+
+<!-- =========================
+HEADER
+========================= -->
+
+<header class="main-header">
+
+    <nav class="navbar-custom">
+
+
+        <!-- IZQUIERDA -->
+
+        <div class="nav-left">
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="nav-link-custom">
+
+                Inicio
+
+            </a>
+
+
+            <a asp-controller="Productos"
+               asp-action="Index"
+               class="nav-link-custom">
+
+                Tienda
+
+            </a>
+
+
+            <a asp-controller="Productos"
+               asp-action="Index"
+               asp-route-categoria="Novedades"
+               class="nav-link-custom">
+
+                Novedades
+
+            </a>
+            <a asp-controller="Seguimiento"
+               asp-action="Index"
+               class="nav-link-custom">
+
+                Seguir pedido
+
+            </a>
+
+
+        </div>
+
+
+        <!-- =========================
+        LOGO
+        ========================= -->
+
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="brand">
+
+            VyR
+
+            <span class="brand-subtitle">
+                Colección Naval
+            </span>
+
+        </a>
+
+
+        <!-- =========================
+        DERECHA
+        ========================= -->
+
+        <div class="nav-right">
+
+            <button type="button"
+                    class="header-search-btn header-search-icon"
+                    onclick="abrirBuscador()"
+                    aria-label="Buscar"
+                    title="Buscar">
+
+                <svg class="search-svg"
+                     xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
+
+                    <circle cx="10.5"
+                            cy="10.5"
+                            r="6.5" />
+
+                    <line x1="15.5"
+                          y1="15.5"
+                          x2="21"
+                          y2="21" />
+                </svg>
+
+            </button>
+
+            <a asp-controller="Admin"
+               asp-action="Login"
+               class="nav-icon-link hide-mobile">
+
+                Admin
+
+            </a>
+
+
+            <!-- =========================
+            BUSCADOR
+            ========================= -->
+
+            <div id="searchOverlay"
+                 class="search-overlay">
+
+                <div class="search-overlay-top">
+
+                    <input type="text"
+                           id="searchInput"
+                           placeholder="Buscar productos..."
+                           autocomplete="off" />
+
+                    <button type="button"
+                            class="search-close"
+                            onclick="cerrarBuscador()">
+
+                        ✕
+
+                    </button>
+
+                </div>
+
+
+                <div id="searchSuggestions"
+                     class="search-suggestions">
+                </div>
+
+            </div>
+
+
+            <script>
+
+                    const searchOverlay =
+                        document.getElementById("searchOverlay");
+
+                    const searchInput =
+                        document.getElementById("searchInput");
+
+                    const searchSuggestions =
+                        document.getElementById("searchSuggestions");
+
+
+                    function abrirBuscador() {
+
+                        searchOverlay.classList.add("active");
+
+                        document.body.style.overflow = "hidden";
+
+                        setTimeout(() => {
+                            searchInput.focus();
+                        }, 200);
+                    }
+
+
+                    function cerrarBuscador() {
+
+                        searchOverlay.classList.remove("active");
+
+                        document.body.style.overflow = "";
+
+                        searchInput.value = "";
+
+                        searchSuggestions.innerHTML = "";
+                    }
+
+
+                    searchInput.addEventListener(
+                        "input",
+                        async function () {
+
+                            const texto =
+                                this.value.trim();
+
+
+                            if (texto.length === 0) {
+
+                                searchSuggestions.innerHTML = "";
+
+                                return;
+                            }
+
+
+                            const response =
+                                await fetch(
+                                    `/Productos/Sugerencias?q=${encodeURIComponent(texto)}`
+                                );
+
+
+                            const productos =
+                                await response.json();
+
+
+                            if (productos.length === 0) {
+
+                                searchSuggestions.innerHTML = `
+                                    <p class="search-no-results">
+                                        No encontramos productos.
+                                    </p>
+                                `;
+
+                                return;
+                            }
+
+
+                            searchSuggestions.innerHTML =
+                                productos.map(producto => `
+
+                                    <a href="/Productos/Detalle/${producto.id}"
+                                       class="search-suggestion">
+
+                                        ${
+                                            producto.imagen
+                                                ? `<img src="${producto.imagen}"
+                                                        alt="${producto.nombre}">`
+                                                : ""
+                                        }
+
+                                        <div>
+
+                                            <span class="search-suggestion-name">
+                                                ${producto.nombre}
+                                            </span>
+
+                                            <span class="search-suggestion-price">
+                                                $${Number(producto.precio)
+                                                    .toLocaleString("es-AR")}
+                                            </span>
+
+                                        </div>
+
+                                    </a>
+
+                                `).join("");
+                        }
+                    );
+
+
+                    document.addEventListener(
+                        "keydown",
+                        function(event) {
+
+                            if (event.key === "Escape") {
+                                cerrarBuscador();
+                            }
+
+                        }
+                    );
+
+                </script>
+
+
+            <style>
+
+                    .header-search-btn {
+                        border: 0;
+
+                        background: transparent;
+
+                        padding: 0;
+
+                        font: inherit;
+
+                        color: inherit;
+
+                        text-transform: uppercase;
+
+                        cursor: pointer;
+                    }
+
+
+                    /* =========================
+                       BUSCADOR COMPACTO
+                    ========================= */
+
+                    .search-overlay {
+                        position: absolute;
+
+                        top: calc(100% + 10px);
+                        right: 35px;
+
+                        width: 420px;
+                        max-width: calc(100vw - 40px);
+
+                        padding: 18px;
+
+                        background: #f7f5f1;
+
+                        border: 1px solid #dedad3;
+
+                        box-shadow:
+                            0 12px 30px
+                            rgba(0,0,0,.08);
+
+                        z-index: 2000;
+
+                        opacity: 0;
+
+                        visibility: hidden;
+
+                        transform: translateY(-6px);
+
+                        transition:
+                            opacity .2s ease,
+                            transform .2s ease,
+                            visibility .2s;
+                    }
+
+
+                    .search-overlay.active {
+                        opacity: 1;
+
+                        visibility: visible;
+
+                        transform: translateY(0);
+                    }
+
+
+                    /* BARRA */
+
+                    .search-overlay-top {
+                        display: flex;
+
+                        align-items: center;
+
+                        gap: 12px;
+
+                        border-bottom:
+                            1px solid
+                            #1b1b1b;
+                    }
+
+
+                    /* INPUT */
+
+                    .search-overlay-top input {
+                        flex: 1;
+
+                        height: 40px;
+
+                        padding: 0;
+
+                        border: 0;
+
+                        outline: none;
+
+                        background: transparent;
+
+                        font-family: inherit;
+
+                        font-size: 14px;
+                    }
+
+
+                    .search-overlay-top input::placeholder {
+                        color: #aaa6a0;
+                    }
+
+
+                    /* CERRAR */
+
+                    .search-close {
+                        width: 28px;
+
+                        height: 28px;
+
+                        padding: 0;
+
+                        border: 0;
+
+                        background: transparent;
+
+                        display: flex;
+
+                        align-items: center;
+
+                        justify-content: center;
+
+                        font-size: 14px;
+
+                        cursor: pointer;
+                    }
+
+
+                    /* =========================
+                       SUGERENCIAS
+                    ========================= */
+
+                    .search-suggestions {
+                        margin-top: 10px;
+
+                        max-height: 260px;
+
+                        overflow-y: auto;
+                    }
+
+
+                    .search-suggestions:empty {
+                        display: none;
+                    }
+
+
+                    .search-suggestion {
+                        display: flex;
+
+                        align-items: center;
+
+                        gap: 11px;
+
+                        padding: 9px 0;
+
+                        border-bottom:
+                            1px solid
+                            #e3dfd8;
+
+                        color: #171717;
+
+                        text-decoration: none;
+                    }
+
+
+                    .search-suggestion:last-child {
+                        border-bottom: 0;
+                    }
+
+
+                    .search-suggestion:hover {
+                        opacity: .65;
+                    }
+
+
+                    .search-suggestion img {
+                        width: 46px;
+
+                        height: 46px;
+
+                        object-fit: cover;
+
+                        background: #ece9e3;
+                    }
+
+
+                    .search-suggestion > div {
+                        display: flex;
+
+                        flex-direction: column;
+                    }
+
+
+                    .search-suggestion-name {
+                        font-size: 13px;
+
+                        font-weight: 500;
+                    }
+
+
+                    .search-suggestion-price {
+                        margin-top: 2px;
+
+                        color: #777;
+
+                        font-size: 11px;
+                    }
+
+                </style>
+
+
+            <!-- =========================
+            CARRITO
+            ========================= -->
+
+            <button type="button"
+                    class="header-cart-button"
+                    onclick="abrirCarrito()">
+
+                Carrito
+
+                <span class="cart-count"
+                      id="cartCount">
+
+                    0
+
+                </span>
+
+            </button>
+
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<!-- =========================
+CONTENIDO
+========================= -->
+
+<main class="page-content">
+
+    @RenderBody()
+
+</main>
+
+
+<!-- =========================================================
+FOOTER — VYR NAVY POP
+========================================================= -->
+
+<footer class="footer">
+
+    <div class="footer-inner">
+
+
+        <!-- =========================
+        MARCA
+        ========================= -->
+
+        <div class="footer-main">
+
+            <p class="footer-eyebrow">
+                VYR / COLECCIÓN NAVAL
+            </p>
+
+            <div class="footer-brand">
+                VYR<span class="footer-star">✦</span>
+            </div>
+
+            <p class="footer-slogan">
+                Diseños que navegan<br />
+                con vos.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+        TIENDA
+        ========================= -->
+
+        <div class="footer-column">
+
+            <div class="footer-title">
+                Tienda
+            </div>
+
+            <div class="footer-links">
+
+                <a asp-controller="Productos"
+                   asp-action="Index">
+
+                    Todos los productos
+
+                </a>
+
+
+                <a asp-controller="Productos"
+                   asp-action="Index"
+                   asp-route-categoria="Novedades">
+
+                    Novedades
+
+                </a>
+
+
+                <a asp-controller="Productos"
+                   asp-action="Index"
+                   asp-route-categoria="Accesorios">
+
+                    Accesorios
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+        COLECCIONES
+        ========================= -->
+
+        <div class="footer-column">
+
+            <div class="footer-title">
+                Colecciones
+            </div>
+
+            <div class="footer-links">
+
+                <a asp-controller="Coleccion"
+                   asp-action="Index">
+
+                    Colección ESSA
+
+                </a>
+
+
+                <a asp-controller="ColeccionArmada"
+                   asp-action="Index">
+
+                    Colección Armada
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+        AYUDA
+        ========================= -->
+
+        <div class="footer-column">
+
+            <div class="footer-title">
+                Ayuda
+            </div>
+
+            <div class="footer-links">
+
+                <a href="#">
+                    Cómo comprar
+                </a>
+
+                <a href="#">
+                    Envíos
+                </a>
+
+                <a href="#">
+                    Transferencias
+                </a>
+
+                <a href="#">
+                    Preguntas frecuentes
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+        CONTACTO
+        ========================= -->
+
+        <div class="footer-column">
+
+            <div class="footer-title">
+                Contacto
+            </div>
+
+            <div class="footer-links">
+
+                <a href="#">
+                    WhatsApp
+                </a>
+
+                <a href="#">
+                    Instagram
+                </a>
+
+                <a href="#">
+                    Contactanos
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+    FOOTER INFERIOR
+    ========================= -->
+
+    <div class="footer-bottom">
+
+        <span>
+            © @DateTime.Now.Year VYR
+        </span>
+
+        <span class="footer-bottom-center">
+            COLECCIÓN NAVAL
+        </span>
+
+        <span>
+            PAGO POR TRANSFERENCIA BANCARIA
+        </span>
+
+    </div>
+
+</footer>
+
+
+<!-- =========================================
+CARRITO LATERAL GLOBAL
+========================================== -->
+
+<div id="cartDrawerContainer"></div>
+
+
+<!-- =========================================
+JAVASCRIPT DEL CARRITO
+========================================== -->
+
+<script>
+
+        // =========================================
+        // ABRIR CARRITO
+        // =========================================
+
+        async function abrirCarrito() {
+
+            try {
+
+                const response = await fetch(
+                    '@Url.Action("Drawer", "Carrito")'
+                );
+
+
+                if (!response.ok) {
+
+                    console.error(
+                        "No se pudo cargar el carrito."
+                    );
+
+                    return;
+                }
+
+
+                const html =
+                    await response.text();
+
+
+                const container =
+                    document.getElementById(
+                        "cartDrawerContainer"
+                    );
+
+
+                if (!container) {
+
+                    console.error(
+                        "No existe cartDrawerContainer."
+                    );
+
+                    return;
+                }
+
+
+                container.innerHTML = html;
+
+
+                const drawer =
+                    document.getElementById(
+                        "cartDrawer"
+                    );
+
+
+                const overlay =
+                    document.getElementById(
+                        "cartOverlay"
+                    );
+
+
+                if (!drawer) {
+
+                    console.error(
+                        "No se encontró cartDrawer."
+                    );
+
+                    return;
+                }
+
+
+                requestAnimationFrame(() => {
+
+                    drawer.classList.add(
+                        "open"
+                    );
+
+
+                    if (overlay) {
+
+                        overlay.classList.add(
+                            "open"
+                        );
+
+                    }
+
+
+                    document.body.classList.add(
+                        "cart-is-open"
+                    );
+
+                });
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Error al abrir carrito:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // CERRAR CARRITO
+        // =========================================
+
+        function cerrarCarrito() {
+
+            const container =
+                document.getElementById(
+                    "cartDrawerContainer"
+                );
+
+            if (container) {
+                container.innerHTML = "";
+            }
+
+            document.body.classList.remove(
+                "cart-is-open"
+            );
+
+            document.body.style.overflow = "";
+        }
+        // =========================================
+        // AGREGAR PRODUCTO
+        // =========================================
+
+        async function agregarAlCarrito(event, id) {
+
+            event.preventDefault();
+
+
+            const form =
+                event.currentTarget;
+
+
+            // Validaciones del formulario
+
+            if (!form.checkValidity()) {
+
+                form.reportValidity();
+
+                return;
+            }
+
+
+            const datos =
+                new FormData(form);
+
+
+            datos.set(
+                "id",
+                id
+            );
+
+
+            try {
+
+                const response = await fetch(
+                    '@Url.Action("AgregarAjax", "Carrito")',
+                    {
+                        method: "POST",
+
+                        body: datos
+                    }
+                );
+
+
+                if (!response.ok) {
+
+                    console.error(
+                        "No se pudo agregar el producto."
+                    );
+
+                    return;
+                }
+
+
+                // PRIMERO ABRIMOS EL CARRITO
+
+                await abrirCarrito();
+
+
+                // DESPUÉS ACTUALIZAMOS EL CONTADOR
+
+                await cargarCantidadCarrito();
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Error al agregar al carrito:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // CAMBIAR CANTIDAD
+        // =========================================
+
+        async function cambiarCantidad(
+            id,
+            cantidad)
+        {
+
+            try {
+
+                const datos =
+                    new URLSearchParams();
+
+
+                datos.append(
+                    "id",
+                    id
+                );
+
+
+                datos.append(
+                    "cantidad",
+                    cantidad
+                );
+
+
+                const response = await fetch(
+                    '@Url.Action("ActualizarAjax", "Carrito")',
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/x-www-form-urlencoded"
+                        },
+
+                        body:
+                            datos.toString()
+                    }
+                );
+
+
+                if (!response.ok) {
+
+                    console.error(
+                        "No se pudo actualizar la cantidad."
+                    );
+
+                    return;
+                }
+
+
+                await abrirCarrito();
+
+                await cargarCantidadCarrito();
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Error al actualizar carrito:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // ELIMINAR PRODUCTO
+        // =========================================
+
+        async function eliminarDelCarrito(id) {
+
+            try {
+
+                const datos =
+                    new URLSearchParams();
+
+
+                datos.append(
+                    "id",
+                    id
+                );
+
+
+                const response = await fetch(
+                    '@Url.Action("QuitarAjax", "Carrito")',
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/x-www-form-urlencoded"
+                        },
+
+                        body:
+                            datos.toString()
+                    }
+                );
+
+
+                if (!response.ok) {
+
+                    console.error(
+                        "No se pudo eliminar el producto."
+                    );
+
+                    return;
+                }
+
+
+                await abrirCarrito();
+
+                await cargarCantidadCarrito();
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Error al eliminar producto:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // ACTUALIZAR CONTADOR
+        // =========================================
+
+        function actualizarContador(cantidad) {
+
+            const contador =
+                document.getElementById(
+                    "cartCount"
+                );
+
+
+            if (!contador) {
+
+                return;
+
+            }
+
+
+            contador.textContent =
+                cantidad ?? 0;
+
+        }
+
+
+        // =========================================
+        // OBTENER CANTIDAD
+        // =========================================
+
+        async function cargarCantidadCarrito() {
+
+            try {
+
+                const response = await fetch(
+                    '@Url.Action("Cantidad", "Carrito")'
+                );
+
+
+                if (!response.ok) {
+
+                    return;
+
+                }
+
+
+                const resultado =
+                    await response.json();
+
+
+                actualizarContador(
+                    resultado.cantidad
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    "No se pudo cargar el contador:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // AL CARGAR LA PÁGINA
+        // =========================================
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                cargarCantidadCarrito();
+
+            }
+        );
+
+
+        // =========================================
+        // ESC PARA CERRAR
+        // =========================================
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "Escape") {
+
+                    cerrarCarrito();
+
+                }
+
+            }
+        );
+
+    </script>
+
+
+@await RenderSectionAsync(
+    "Scripts",
+    required: false
+)
+
+</body>
+
+</html>

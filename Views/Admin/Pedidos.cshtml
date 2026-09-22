@@ -1,0 +1,712 @@
+@model List<TiendaNaval.Models.Pedido>
+
+@{
+    ViewData["Title"] = "Pedidos";
+}
+
+<section class="admin-page orders-page">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <div class="admin-top orders-header">
+
+        <div>
+            <p class="admin-eyebrow">
+                ADMINISTRACIÓN
+            </p>
+
+            <h1>Pedidos</h1>
+
+            <p class="orders-description">
+                Gestioná los pedidos realizados en VyR.
+            </p>
+        </div>
+
+        <a asp-action="Index"
+           class="admin-btn">
+            ← Productos
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         SIN PEDIDOS
+    ========================== -->
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="orders-empty">
+            <span>PEDIDOS</span>
+            <h2>No hay pedidos todavía.</h2>
+            <p>Los nuevos pedidos aparecerán acá.</p>
+        </div>
+    }
+    else
+    {
+        <!-- =========================
+             LISTADO
+        ========================== -->
+
+        <div class="orders-list">
+
+            @foreach (var pedido in Model)
+            {
+                <article class="order-card">
+
+                    <!-- CABECERA -->
+
+                    <div class="order-card-header">
+
+                        <div class="order-customer">
+
+                            <span class="order-number">
+                                PEDIDO #@pedido.Id
+                            </span>
+
+                            <h2>
+                                @pedido.NombreCliente
+                            </h2>
+
+                            <span class="order-date">
+    @pedido.Fecha.ToLocalTime().ToString("dd/MM/yyyy · HH:mm")
+</span>
+
+                        </div>
+
+
+                        <div class="order-price">
+
+                            <span>
+                                TOTAL
+                            </span>
+
+                            <strong>
+                                $@pedido.Total.ToString("N0")
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- INFORMACIÓN RESUMIDA -->
+
+                    <div class="order-summary">
+
+                        <div class="order-summary-item">
+                            <span>Teléfono</span>
+
+                            <strong>
+                                @pedido.Telefono
+                            </strong>
+                        </div>
+
+
+                        <div class="order-summary-item">
+                            <span>Envío</span>
+
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(pedido.MetodoEnvio)
+                                    ? "Sin especificar"
+                                    : pedido.MetodoEnvio)
+                            </strong>
+                        </div>
+
+
+                        <div class="order-summary-item">
+                            <span>Pago</span>
+
+                            <strong>
+                                @pedido.MetodoPago
+                            </strong>
+                        </div>
+
+
+                        <div class="order-summary-item">
+                            <span>Productos</span>
+
+                            <strong>
+                                @pedido.Detalles.Sum(x => x.Cantidad)
+                            </strong>
+                        </div>
+
+
+                        <div class="order-summary-item">
+                            <span>Estado</span>
+
+                            <span class="order-state
+                                state-@pedido.Estado.ToLower().Replace(" ", "-")">
+
+                                @pedido.Estado
+
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <!-- ACCIONES -->
+
+                    <div class="order-actions">
+
+                        <!-- VER DETALLE -->
+
+                        <a asp-action="DetallePedido"
+                           asp-route-id="@pedido.Id"
+                           class="order-detail-button">
+
+                            Ver detalle
+
+                            <span>→</span>
+
+                        </a>
+
+
+                        <!-- CAMBIAR ESTADO -->
+
+                        <form asp-action="CambiarEstado"
+                              method="post"
+                              class="order-status">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@pedido.Id" />
+
+
+                            <select name="estado">
+
+                                <option value="Pendiente"
+                                        selected="@(pedido.Estado == "Pendiente")">
+                                    Pendiente
+                                </option>
+
+                                <option value="Pagado"
+                                        selected="@(pedido.Estado == "Pagado")">
+                                    Pagado
+                                </option>
+
+                                <option value="Preparando"
+                                        selected="@(pedido.Estado == "Preparando")">
+                                    Preparando
+                                </option>
+
+                                <option value="Entregado"
+                                        selected="@(pedido.Estado == "Entregado")">
+                                    Entregado
+                                </option>
+
+                                <option value="Cancelado"
+                                        selected="@(pedido.Estado == "Cancelado")">
+                                    Cancelado
+                                </option>
+
+                            </select>
+
+
+                            <button type="submit">
+                                Actualizar
+                            </button>
+
+                        </form>
+
+
+                        <!-- ELIMINAR -->
+
+                        <form asp-action="EliminarPedido"
+                              asp-route-id="@pedido.Id"
+                              method="post"
+                              class="order-delete"
+                              onsubmit="return confirm('¿Seguro que querés eliminar el pedido #@pedido.Id? Esta acción no se puede deshacer.');">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit">
+                                Eliminar
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+
+</section>
+<style>
+    /* =========================================================
+       LISTADO DE PEDIDOS
+       SOLO AFECTA A Views/Admin/Pedidos.cshtml
+    ========================================================= */
+
+    .orders-page {
+        max-width: 1450px;
+        margin: 0 auto;
+        padding-bottom: 100px;
+    }
+
+
+    /* HEADER */
+
+    .orders-page .orders-header {
+        margin-bottom: 50px;
+    }
+
+    .orders-page .orders-description {
+        margin: 12px 0 0;
+
+        font-size: 14px;
+        color: #777;
+    }
+
+
+    /* =========================================================
+       LISTA
+    ========================================================= */
+
+    .orders-page .orders-list {
+        display: flex;
+        flex-direction: column;
+
+        gap: 16px;
+    }
+
+
+    /* =========================================================
+       CARD DEL PEDIDO
+    ========================================================= */
+
+    .orders-page .order-card {
+        padding: 30px 34px;
+
+        background: #ebe9e4;
+    }
+
+
+    /* HEADER DE LA CARD */
+
+    .orders-page .order-card-header {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: flex-start;
+
+        gap: 30px;
+
+        padding-bottom: 24px;
+
+        border-bottom: 1px solid rgba(0, 0, 0, .14);
+    }
+
+
+    /* NÚMERO */
+
+    .orders-page .order-number {
+        display: block;
+
+        margin-bottom: 8px;
+
+        font-size: 10px;
+        font-weight: 500;
+
+        letter-spacing: 1.6px;
+
+        color: #858585;
+
+        text-transform: uppercase;
+    }
+
+
+    /* CLIENTE */
+
+    .orders-page .order-customer h2 {
+        margin: 0 0 8px;
+
+        font-size: 27px;
+        font-weight: 400;
+
+        letter-spacing: -.6px;
+    }
+
+
+    /* FECHA */
+
+    .orders-page .order-date {
+        display: block;
+
+        font-size: 12px;
+
+        color: #777;
+    }
+
+
+    /* =========================================================
+       PRECIO
+    ========================================================= */
+
+    .orders-page .order-price {
+        flex-shrink: 0;
+
+        text-align: right;
+    }
+
+    .orders-page .order-price span {
+        display: block;
+
+        margin-bottom: 5px;
+
+        font-size: 9px;
+
+        letter-spacing: 1.5px;
+
+        color: #888;
+    }
+
+    .orders-page .order-price strong {
+        display: block;
+
+        font-size: 25px;
+        font-weight: 500;
+    }
+
+
+    /* =========================================================
+       INFORMACIÓN DEL PEDIDO
+    ========================================================= */
+
+    .orders-page .order-summary {
+        display: grid;
+
+        grid-template-columns:
+        1.2fr
+        1.2fr
+        1.4fr
+        .7fr
+        1fr;
+
+        gap: 25px;
+
+        padding: 25px 0;
+    }
+
+
+    .orders-page .order-summary-item {
+        min-width: 0;
+    }
+
+
+    .orders-page .order-summary-item > span:first-child {
+        display: block;
+
+        margin-bottom: 7px;
+
+        font-size: 9px;
+        font-weight: 500;
+
+        letter-spacing: 1.2px;
+
+        color: #888;
+
+        text-transform: uppercase;
+    }
+
+
+    .orders-page .order-summary-item strong {
+        display: block;
+
+        font-size: 13px;
+        font-weight: 500;
+
+        color: #171717;
+
+        word-break: break-word;
+    }
+
+
+    /* =========================================================
+       ESTADO
+    ========================================================= */
+
+    .orders-page .order-state {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        min-height: 29px;
+
+        padding: 0 13px;
+
+        border: 1px solid #aaa;
+        border-radius: 30px;
+
+        font-size: 9px;
+        font-weight: 600;
+
+        letter-spacing: 1px;
+
+        text-transform: uppercase;
+    }
+
+
+    /* PENDIENTE */
+
+    .orders-page .state-pendiente {
+        background: #f3eee0;
+    }
+
+
+    /* PAGADO */
+
+    .orders-page .state-pagado {
+        background: #e4eee6;
+    }
+
+
+    /* PREPARANDO */
+
+    .orders-page .state-preparando {
+        background: #e5e9ee;
+    }
+
+
+    /* ENTREGADO */
+
+    .orders-page .state-entregado {
+        background: #e0ebe3;
+    }
+
+
+    /* CANCELADO */
+
+    .orders-page .state-cancelado {
+        background: #efe2e2;
+    }
+
+
+    /* =========================================================
+       ACCIONES
+    ========================================================= */
+
+    .orders-page .order-actions {
+        display: flex;
+
+        align-items: center;
+
+        gap: 9px;
+
+        padding-top: 20px;
+
+        border-top: 1px solid rgba(0, 0, 0, .14);
+    }
+
+
+    /* =========================================================
+       VER DETALLE
+    ========================================================= */
+
+    .orders-page .order-detail-button {
+        height: 43px;
+
+        padding: 0 20px;
+
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 35px;
+
+        background: #171717;
+
+        color: #fff;
+
+        border: 1px solid #171717;
+
+        text-decoration: none;
+
+        font-size: 10px;
+        font-weight: 500;
+
+        letter-spacing: 1.1px;
+
+        text-transform: uppercase;
+
+        transition: .2s ease;
+    }
+
+
+    .orders-page .order-detail-button:hover {
+        background: transparent;
+
+        color: #171717;
+    }
+
+
+    /* =========================================================
+       CAMBIAR ESTADO
+    ========================================================= */
+
+    .orders-page .order-status {
+        display: flex;
+
+        gap: 7px;
+
+        margin-left: auto;
+    }
+
+
+    .orders-page .order-status select {
+        width: auto;
+
+        min-width: 180px;
+        height: 43px;
+
+        margin: 0;
+
+        padding: 0 40px 0 15px;
+
+        border: 1px solid #aaa;
+        border-radius: 0;
+
+        background-color: transparent;
+
+        color: #171717;
+
+        font-size: 12px;
+
+        outline: none;
+    }
+
+
+    .orders-page .order-status button {
+        width: auto;
+
+        height: 43px;
+
+        margin: 0;
+
+        padding: 0 20px;
+
+        border: 1px solid #171717;
+
+        background: #171717;
+
+        color: #fff;
+
+        font-size: 10px;
+        font-weight: 500;
+
+        letter-spacing: 1px;
+
+        text-transform: uppercase;
+
+        cursor: pointer;
+
+        transition: .2s ease;
+    }
+
+
+    .orders-page .order-status button:hover {
+        background: transparent;
+
+        color: #171717;
+    }
+
+
+    /* =========================================================
+       ELIMINAR
+    ========================================================= */
+
+    .orders-page .order-delete {
+        width: auto;
+
+        margin: 0;
+    }
+
+
+    .orders-page .order-delete button {
+        width: auto;
+
+        height: 43px;
+
+        margin: 0;
+
+        padding: 0 18px;
+
+        border: 1px solid #b53c3c;
+
+        background: transparent;
+
+        color: #ad3333;
+
+        font-size: 10px;
+        font-weight: 500;
+
+        letter-spacing: 1px;
+
+        text-transform: uppercase;
+
+        cursor: pointer;
+
+        transition: .2s ease;
+    }
+
+
+    .orders-page .order-delete button:hover {
+        background: #ad3333;
+
+        color: white;
+    }
+
+
+    /* =========================================================
+       SIN PEDIDOS
+    ========================================================= */
+
+    .orders-page .orders-empty {
+        padding: 70px 30px;
+
+        background: #ebe9e4;
+
+        text-align: center;
+    }
+
+
+    .orders-page .orders-empty > span {
+        display: block;
+
+        margin-bottom: 10px;
+
+        font-size: 9px;
+
+        letter-spacing: 2px;
+
+        color: #888;
+    }
+
+
+    .orders-page .orders-empty h2 {
+        margin: 0 0 8px;
+
+        font-size: 27px;
+        font-weight: 400;
+    }
+
+
+    .orders-page .orders-empty p {
+        margin: 0;
+
+        font-size: 13px;
+
+        color: #777;
+    }
+    
+</style>

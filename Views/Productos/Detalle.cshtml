@@ -1,0 +1,1039 @@
+@model TiendaNaval.Models.Producto
+
+@{
+    ViewData["Title"] = Model.Nombre;
+}
+
+<section class="rhode-detail">
+
+    <div class="rhode-detail-grid">
+
+        <!-- =========================
+             GALERÍA DEL PRODUCTO
+        ========================== -->
+
+        <div class="rhode-product-gallery">
+
+            @{
+                var imagenes = Model.Imagenes
+                    .OrderBy(x => x.Orden)
+                    .ToList();
+
+                // Si no existen imágenes adicionales,
+                // usamos la imagen principal del producto.
+                var todasLasImagenes = imagenes
+                    .Select(x => x.ImagenUrl)
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .ToList();
+
+                // Agregar ImagenUrl si todavía no está incluida
+                if (!string.IsNullOrWhiteSpace(Model.ImagenUrl) &&
+                    !todasLasImagenes.Contains(Model.ImagenUrl))
+                {
+                    todasLasImagenes.Insert(0, Model.ImagenUrl);
+                }
+
+                var imagenPrincipal = todasLasImagenes.FirstOrDefault();
+            }
+
+
+            <!-- IMAGEN GRANDE -->
+            <div class="rhode-detail-image">
+
+                @if (!string.IsNullOrWhiteSpace(imagenPrincipal))
+                {
+                    <img id="imagenPrincipal"
+                         src="@imagenPrincipal"
+                         alt="@Model.Nombre" />
+
+                    @if (todasLasImagenes.Count > 1)
+                    {
+                        <!-- FLECHA IZQUIERDA -->
+                        <button type="button"
+                                class="gallery-arrow gallery-arrow-left"
+                                onclick="imagenAnterior()"
+                                aria-label="Imagen anterior">
+                            ‹
+                        </button>
+
+                        <!-- FLECHA DERECHA -->
+                        <button type="button"
+                                class="gallery-arrow gallery-arrow-right"
+                                onclick="imagenSiguiente()"
+                                aria-label="Imagen siguiente">
+                            ›
+                        </button>
+                    }
+                }
+                else
+                {
+                    <div class="rhode-detail-placeholder">
+                        VyR
+                    </div>
+                }
+
+            </div>
+
+
+            <!-- MINIATURAS -->
+            @if (todasLasImagenes.Count > 1)
+            {
+                <div class="rhode-gallery-thumbnails">
+
+                    @for (var i = 0; i < todasLasImagenes.Count; i++)
+                    {
+                        var indice = i;
+                        var imagen = todasLasImagenes[i];
+
+                        <button type="button"
+                                class="rhode-gallery-thumb @(i == 0 ? "active" : "")"
+                                data-index="@indice"
+                                onclick="seleccionarImagen(@indice)">
+
+                            <img src="@imagen"
+                                 alt="@Model.Nombre - imagen @(i + 1)" />
+
+                        </button>
+                    }
+
+                </div>
+            }
+
+        </div>
+
+
+        <script>
+
+            const imagenesProducto = [
+                @foreach (var imagen in todasLasImagenes)
+                {
+                    @: '@Html.Raw(imagen)',
+                }
+            ];
+
+            let imagenActual = 0;
+
+
+            function seleccionarImagen(indice) {
+
+                if (imagenesProducto.length === 0)
+                    return;
+
+                imagenActual = indice;
+
+                actualizarGaleria();
+            }
+
+
+            function imagenSiguiente() {
+
+                if (imagenesProducto.length === 0)
+                    return;
+
+                imagenActual++;
+
+                if (imagenActual >= imagenesProducto.length) {
+                    imagenActual = 0;
+                }
+
+                actualizarGaleria();
+            }
+
+
+            function imagenAnterior() {
+
+                if (imagenesProducto.length === 0)
+                    return;
+
+                imagenActual--;
+
+                if (imagenActual < 0) {
+                    imagenActual = imagenesProducto.length - 1;
+                }
+
+                actualizarGaleria();
+            }
+
+
+            function actualizarGaleria() {
+
+                const imagenPrincipal =
+                    document.getElementById("imagenPrincipal");
+
+                if (!imagenPrincipal)
+                    return;
+
+                imagenPrincipal.src =
+                    imagenesProducto[imagenActual];
+
+
+                // Quitar selección de todas
+                document
+                    .querySelectorAll(".rhode-gallery-thumb")
+                    .forEach(x => x.classList.remove("active"));
+
+
+                // Marcar miniatura seleccionada
+                const miniatura =
+                    document.querySelector(
+                        `.rhode-gallery-thumb[data-index="${imagenActual}"]`
+                    );
+
+                if (miniatura) {
+
+                    miniatura.classList.add("active");
+
+                    // Si hay muchas imágenes, desplazar las miniaturas
+                    miniatura.scrollIntoView({
+                        behavior: "smooth",
+                        block: "nearest",
+                        inline: "center"
+                    });
+                }
+            }
+
+        </script>
+
+
+        <!-- =========================
+             INFORMACIÓN
+        ========================== -->
+
+        <div class="rhode-detail-content">
+
+            @if (Model.Stock > 0)
+            {
+                <form class="product-detail-form"
+                      onsubmit="agregarAlCarrito(event, @Model.Id)">
+
+                    <!-- ID DEL PRODUCTO -->
+                    <input type="hidden"
+                           name="id"
+                           value="@Model.Id" />
+
+
+                    <!-- =========================
+                         INFORMACIÓN PRINCIPAL
+                    ========================== -->
+
+                    <div class="rhode-detail-main">
+
+                        <p class="rhode-detail-category">
+                            @(Model.Categoria?.Nombre ?? "COLECCIÓN NAVAL")
+                        </p>
+
+                        <h1>
+                            @Model.Nombre
+                        </h1>
+
+                        <p class="rhode-detail-price">
+                            $@Model.Precio.ToString("N0")
+                        </p>
+
+                        <div class="rhode-detail-description">
+                            @Model.Descripcion
+                        </div>
+
+
+                        <!-- =========================
+                             OPCIONES GENERALES
+                        ========================== -->
+
+                        <div class="product-options">
+
+                            @if (Model.UsaInicial)
+                            {
+                                <div class="product-option-field">
+
+                                    <label>
+                                        INICIAL
+                                    </label>
+
+                                    <input type="text"
+                                           name="inicial"
+                                           maxlength="1"
+                                           pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ]"
+                                           placeholder="Ej. L"
+                                           autocomplete="off"
+                                           required />
+
+                                </div>
+                            }
+
+
+                            @if (Model.UsaApellido)
+                            {
+                                <div class="product-option-field">
+
+                                    <label>
+                                        APELLIDO
+                                    </label>
+
+                                    <input type="text"
+                                           name="apellido"
+                                           placeholder="Ej. Espíndola"
+                                           pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+"
+                                           autocomplete="off"
+                                           required />
+
+                                </div>
+                            }
+
+
+                            @if (Model.UsaNombre)
+                            {
+                                <div class="product-option-field">
+
+                                    <label>
+                                        NOMBRE
+                                    </label>
+
+                                    <input type="text"
+                                           name="nombrePersonalizado"
+                                           maxlength="12"
+                                           pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü ]{1,12}"
+                                           placeholder="Ej. Ludmila"
+                                           autocomplete="off"
+                                           required />
+
+                                </div>
+                            }
+
+
+                            <!-- =========================
+                                 JERARQUÍA
+                            ========================== -->
+
+                            @if (Model.UsaJerarquia)
+                            {
+                                <div class="product-option-field">
+
+                                    <label>
+                                        JERARQUÍA
+                                    </label>
+
+                                    <select name="jerarquia"
+                                            required>
+
+                                        <option value="">
+                                            Seleccionar jerarquía
+                                        </option>
+
+                                        <option value="Cabo Segundo">
+                                            Marinero Segundo
+                                        </option>
+
+                                        <option value="Cabo Segundo">
+                                            Marinero Primero
+                                        </option>
+
+                                        <option value="Cabo Segundo">
+                                            Cabo Segundo
+                                        </option>
+
+                                        <option value="Cabo Primero">
+                                            Cabo Primero
+                                        </option>
+
+                                        <option value="Cabo Principal">
+                                            Cabo Principal
+                                        </option>
+
+                                        <option value="Suboficial Segundo">
+                                            Suboficial Segundo
+                                        </option>
+
+                                        <option value="Suboficial Primero">
+                                            Suboficial Primero
+                                        </option>
+
+                                        <option value="Suboficial Principal">
+                                            Suboficial Principal
+                                        </option>
+
+                                        <option value="Suboficial Mayor">
+                                            Suboficial Mayor
+                                        </option>
+
+                                        <option value="Guardiamarina">
+                                            Guardiamarina
+                                        </option>
+
+                                        <option value="Teniente de Corbeta">
+                                            Teniente de Corbeta
+                                        </option>
+
+                                        <option value="Teniente de Fragata">
+                                            Teniente de Fragata
+                                        </option>
+
+                                        <option value="Teniente de Navío">
+                                            Teniente de Navío
+                                        </option>
+
+                                        <option value="Capitán de Corbeta">
+                                            Capitán de Corbeta
+                                        </option>
+
+                                        <option value="Capitán de Fragata">
+                                            Capitán de Fragata
+                                        </option>
+
+                                        <option value="Capitán de Navío">
+                                            Capitán de Navío
+                                        </option>
+
+                                    </select>
+
+                                </div>
+                            }
+
+
+                            <!-- =========================
+                                 JERARQUÍA ASPIRANTES
+                            ========================== -->
+
+                            @if (Model.TieneJerarquiaAspirantes)
+                            {
+                                <div class="product-option-field">
+
+                                    <label>
+                                        JERARQUÍA ASPIRANTE
+                                    </label>
+
+                                    <select name="jerarquiaAspirantes"
+                                            required>
+
+                                        <option value="">
+                                            Seleccionar jerarquía
+                                        </option>
+
+                                        <option value="Aspirante de 1er año">
+                                            Aspirante de 1er año
+                                        </option>
+
+                                        <option value="Aspirante de 2do año">
+                                            Aspirante de 2do año
+                                        </option>
+
+                                        <option value="Aspirante de 3er año">
+                                            Aspirante de 3er año
+                                        </option>
+
+                                        <option value="Dragoneante Segundo">
+                                            Dragoneante Segundo
+                                        </option>
+
+                                        <option value="Dragoneante Primero">
+                                            Dragoneante Primero
+                                        </option>
+
+                                        <option value="Dragoneante Principal">
+                                            Dragoneante Principal
+                                        </option>
+
+                                        <option value="Dragoneante Mayor">
+                                            Dragoneante Mayor
+                                        </option>
+
+                                    </select>
+
+                                </div>
+                            }
+
+
+                            <!-- =========================
+                                 ESPECIALIDAD
+                            ========================== -->
+
+                            @if (Model.UsaEspecialidad)
+                            {
+                                <div class="product-option-field">
+
+                                    <label>
+                                        ESPECIALIDAD
+                                    </label>
+
+                                    <select name="especialidad"
+                                            required>
+
+                                        <option value="">
+                                            Seleccionar especialidad
+                                        </option>
+
+                                        <option value="AERONAUTICOS">
+                                            AERONAUTICOS
+                                        </option>
+
+                                        <option value="APOYO GENERAL">
+                                            APOYO GENERAL
+                                        </option>
+
+                                        <option value="ARSENALES">
+                                            ARSENALES
+                                        </option>
+
+                                        <option value="COMUNICACIONES">
+                                            COMUNICACIONES
+                                        </option>
+
+                                        <option value="ELECTRICISTAS">
+                                            ELECTRICISTAS
+                                        </option>
+
+                                        <option value="ENFERMEROS">
+                                            ENFERMEROS
+                                        </option>
+
+                                        <option value="FURRIELES">
+                                            FURRIELES
+                                        </option>
+
+                                        <option value="INFANTERIA DE MARINA">
+                                            INFANTERIA DE MARINA
+                                        </option>
+
+                                        <option value="INFORMATICOS">
+                                            INFORMATICOS
+                                        </option>
+
+                                        <option value="MAR">
+                                            MAR
+                                        </option>
+
+                                        <option value="MAQUINISTAS">
+                                            MAQUINISTAS
+                                        </option>
+
+                                        <option value="MAQUINISTA CONTROL DE AVERIAS">
+                                            MAQUINISTA CONTROL DE AVERIAS
+                                        </option>
+
+                                        <option value="MUSICOS">
+                                            MUSICOS
+                                        </option>
+
+                                        <option value="MECANICO DE SISTEMAS (MW)">
+                                            MECANICO DE SISTEMAS (MW)
+                                        </option>
+
+                                        <option value="MECANICO DE SISTEMAS (MW)">
+                                            MECANICO DE SISTEMAS (ARTILLERIA)
+                                        </option>
+
+                                        <option value="OPERACIONES">
+                                            OPERACIONES
+                                        </option>
+
+                                        <option value="SERVICIOS HIDROGRAFICOS">
+                                            SERVICIOS HIDROGRAFICOS
+                                        </option>
+
+                                    </select>
+
+                                </div>
+                            }
+
+
+                            <!-- =========================
+                                 TIPO TRASERO
+                            ========================== -->
+
+                            @if (Model.UsaTipoTrasero)
+                            {
+                                <div class="product-option-field">
+
+                                    <label>
+                                        TIPO TRASERO
+                                    </label>
+
+                                    <select name="tipoTrasero"
+                                            required>
+
+                                        <option value="">
+                                            Seleccionar opción
+                                        </option>
+
+                                        <option value="Imagen">
+                                            Con iman
+                                        </option>
+
+                                        <option value="Ganchito">
+                                            Con ganchito
+                                        </option>
+
+                                    </select>
+
+                                </div>
+                            }
+
+
+                            <!-- =========================
+                                 OPCIONES SOLO DEL GAFETE
+                            ========================== -->
+
+                            @if (Model.Nombre.Trim()
+                                .Equals(
+                                    "Gafete",
+                                    StringComparison.OrdinalIgnoreCase))
+                            {
+                                <!-- COLOR -->
+
+                                <div class="product-option-field">
+
+                                    <label>
+                                        COLOR
+                                    </label>
+
+                                    <select name="color"
+                                            id="colorGafete"
+                                            required>
+
+                                        <option value="">
+                                            Seleccionar color
+                                        </option>
+
+                                        <option value="Rojo">
+                                            Rojo
+                                        </option>
+
+                                        <option value="Verde">
+                                            Verde
+                                        </option>
+
+                                        <option value="Azul">
+                                            Azul
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <!-- CON NOMBRE -->
+
+                                <div class="product-option-field">
+
+                                    <label>
+                                        CON NOMBRE ARRIBA
+                                    </label>
+
+                                    <select name="conNombre"
+                                            id="conNombreGafete"
+                                            onchange="mostrarNombreGafete()"
+                                            required>
+
+                                        <option value="">
+                                            Seleccionar
+                                        </option>
+
+                                        <option value="Sí">
+                                            Sí
+                                        </option>
+
+                                        <option value="No">
+                                            No
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <!-- NOMBRE Y APELLIDO -->
+
+                                <div class="product-option-field product-option-full"
+                                     id="campoNombreGafete"
+                                     style="display:none;">
+
+                                    <label>
+                                        NOMBRE Y APELLIDO
+                                    </label>
+
+                                    <input type="text"
+                                           name="nombreApellido"
+                                           id="nombreApellidoGafete"
+                                           placeholder="Ej. Juan Pérez" />
+
+                                    <small>
+                                        Escribí el nombre exactamente como
+                                        querés que aparezca.
+                                    </small>
+
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================
+                         CANTIDAD + CARRITO
+                    ========================== -->
+
+                    <div class="rhode-detail-divider"></div>
+
+
+                    <div class="rhode-cart-form">
+
+                        <!-- CANTIDAD -->
+
+                        <div class="rhode-quantity">
+
+                            <span class="rhode-quantity-label">
+                                CANTIDAD
+                            </span>
+
+                            <div class="rhode-quantity-control">
+
+                                <button type="button"
+                                        class="quantity-btn"
+                                        onclick="cambiarCantidadProducto(-1)"
+                                        aria-label="Restar cantidad">
+                                    −
+                                </button>
+
+
+                                <input type="number"
+                                       id="cantidad"
+                                       name="cantidad"
+                                       value="1"
+                                       min="1"
+                                       max="@Math.Min(Model.Stock, 40)"
+                                       step="1"
+                                       inputmode="numeric"
+                                       required />
+
+
+                                <button type="button"
+                                        class="quantity-btn"
+                                        onclick="cambiarCantidadProducto(1)"
+                                        aria-label="Sumar cantidad">
+                                    +
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- AGREGAR AL CARRITO -->
+
+                        <button type="submit"
+                                class="rhode-add-cart">
+
+                            <span class="rhode-add-cart-text">
+                                AGREGAR AL CARRITO
+                            </span>
+
+                            <span class="rhode-add-cart-price">
+                                $@Model.Precio.ToString("N0")
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </form>
+            }
+            else
+            {
+                <div class="rhode-detail-main">
+
+                    <p class="rhode-detail-category">
+                        @(Model.Categoria?.Nombre ?? "COLECCIÓN NAVAL")
+                    </p>
+
+                    <h1>
+                        @Model.Nombre
+                    </h1>
+
+                    <p class="rhode-detail-price">
+                        $@Model.Precio.ToString("N0")
+                    </p>
+
+                    <div class="rhode-detail-description">
+                        @Model.Descripcion
+                    </div>
+
+                </div>
+
+
+                <div class="rhode-detail-divider"></div>
+
+
+                <button class="rhode-add-cart unavailable"
+                        disabled>
+
+                    PRODUCTO NO DISPONIBLE
+
+                </button>
+            }
+
+
+            <!-- =========================
+                 INFORMACIÓN EXTRA
+            ========================== -->
+
+            <div class="rhode-product-extra">
+
+                <details>
+
+                    <summary>
+
+                        DETALLES DEL PRODUCTO
+
+                        <span>+</span>
+
+                    </summary>
+
+                    <div class="rhode-detail-answer">
+                        @Model.Descripcion
+                    </div>
+
+                </details>
+
+
+                <details>
+
+                    <summary>
+
+                        FORMA DE PAGO
+
+                        <span>+</span>
+
+                    </summary>
+
+                    <div class="rhode-detail-answer">
+
+                        El pago se realiza mediante
+                        transferencia bancaria.
+
+                        Los datos de transferencia se
+                        mostrarán al finalizar la compra.
+
+                    </div>
+
+                </details>
+
+
+                <details>
+
+                    <summary>
+
+                        PEDIDOS Y ENVÍOS
+
+                        <span>+</span>
+
+                    </summary>
+
+                    <div class="rhode-detail-answer">
+
+                        Después de finalizar la compra,
+                        podrás enviar el pedido mediante
+                        WhatsApp para coordinar la entrega
+                        o el envío.
+
+                    </div>
+
+                </details>
+
+            </div>
+
+
+            <a asp-controller="Productos"
+               asp-action="Index"
+               class="rhode-detail-back">
+
+                ← VOLVER A LA TIENDA
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==============================
+     JAVASCRIPT GAFETE
+================================ -->
+
+<script>
+
+    function mostrarNombreGafete() {
+
+        const selector =
+            document.getElementById(
+                'conNombreGafete'
+            );
+
+        const contenedor =
+            document.getElementById(
+                'campoNombreGafete'
+            );
+
+        const input =
+            document.getElementById(
+                'nombreApellidoGafete'
+            );
+
+
+        if (!selector ||
+            !contenedor ||
+            !input) {
+
+            return;
+        }
+
+
+        if (selector.value === 'Sí') {
+
+            contenedor.style.display =
+                'flex';
+
+            input.required = true;
+
+        } else {
+
+            contenedor.style.display =
+                'none';
+
+            input.required = false;
+
+            input.value = '';
+        }
+    }
+
+</script>
+
+
+<!-- ==============================
+     JAVASCRIPT CANTIDAD
+================================ -->
+
+<script>
+
+    function cambiarCantidadProducto(cambio) {
+
+        const input =
+            document.getElementById("cantidad");
+
+        if (!input)
+            return;
+
+
+        const minimo =
+            parseInt(input.min) || 1;
+
+        const maximo =
+            parseInt(input.max) || 40;
+
+
+        let valor =
+            parseInt(input.value) || minimo;
+
+
+        valor += cambio;
+
+
+        valor =
+            Math.max(
+                minimo,
+                Math.min(maximo, valor)
+            );
+
+
+        input.value = valor;
+    }
+
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const input =
+                document.getElementById("cantidad");
+
+            if (!input)
+                return;
+
+
+            input.addEventListener(
+                "input",
+                function () {
+
+                    /*
+                     * Permitimos que quede vacío mientras
+                     * el usuario está escribiendo.
+                     */
+                    if (this.value === "")
+                        return;
+
+
+                    const minimo =
+                        parseInt(this.min) || 1;
+
+                    const maximo =
+                        parseInt(this.max) || 40;
+
+
+                    let valor =
+                        parseInt(this.value);
+
+
+                    if (isNaN(valor))
+                        return;
+
+
+                    if (valor > maximo) {
+                        this.value = maximo;
+                    }
+
+
+                    if (valor < minimo) {
+                        this.value = minimo;
+                    }
+
+                }
+            );
+
+
+            input.addEventListener(
+                "blur",
+                function () {
+
+                    const minimo =
+                        parseInt(this.min) || 1;
+
+                    const maximo =
+                        parseInt(this.max) || 40;
+
+
+                    let valor =
+                        parseInt(this.value);
+
+
+                    if (isNaN(valor)) {
+
+                        this.value = minimo;
+
+                        return;
+                    }
+
+
+                    this.value =
+                        Math.max(
+                            minimo,
+                            Math.min(maximo, valor)
+                        );
+
+                }
+            );
+
+        }
+    );
+
+</script>

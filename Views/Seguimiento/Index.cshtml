@@ -1,0 +1,668 @@
+@{
+    ViewData["Title"] = "Seguir mi pedido";
+}
+
+<section class="tracking-page">
+
+    <div class="tracking-shell">
+
+        <!-- =========================
+             ENCABEZADO
+        ========================== -->
+
+        <div class="tracking-header">
+
+            <p class="tracking-eyebrow">
+                VYR / SEGUIMIENTO
+            </p>
+
+            <h1>
+                Seguí tu pedido<span>✦</span>
+            </h1>
+
+            <p class="tracking-description">
+                Ingresá los datos utilizados al realizar
+                tu compra para consultar el estado de tu pedido.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             FORMULARIO
+        ========================== -->
+
+        <div class="tracking-card">
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="tracking-error">
+
+                    <span class="tracking-error-icon">
+                        !
+                    </span>
+
+                    <span>
+                        @ViewBag.Error
+                    </span>
+
+                </div>
+            }
+
+
+            <form asp-controller="Seguimiento"
+                  asp-action="Buscar"
+                  method="post"
+                  class="tracking-form">
+
+                @Html.AntiForgeryToken()
+
+
+                <!-- NÚMERO DE PEDIDO -->
+
+                <div class="tracking-field">
+
+                    <label for="numeroPedido">
+                        NÚMERO DE PEDIDO
+                    </label>
+
+                    <div class="tracking-input">
+
+                        <span class="tracking-input-prefix">
+                            #
+                        </span>
+
+                        <input type="number"
+                               id="numeroPedido"
+                               name="numeroPedido"
+                               min="1"
+                               placeholder="Ej. 28"
+                               autocomplete="off"
+                               required />
+
+                    </div>
+
+                </div>
+
+
+                <!-- TELÉFONO -->
+
+                <div class="tracking-field">
+
+                    <label for="telefono">
+                        TELÉFONO
+                    </label>
+
+                    <input type="tel"
+                           id="telefono"
+                           name="telefono"
+                           placeholder="Ej. 291 412 3456"
+                           autocomplete="tel"
+                           required />
+
+                    <small>
+                        Ingresá el mismo teléfono que utilizaste
+                        al realizar la compra.
+                    </small>
+
+                </div>
+
+
+                <!-- BOTÓN -->
+
+                <button type="submit"
+                        class="tracking-submit">
+
+                    <span>
+                        VER MI PEDIDO
+                    </span>
+
+                    <span class="tracking-submit-arrow">
+                        →
+                    </span>
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- =========================
+             AYUDA
+        ========================== -->
+
+        <div class="tracking-help">
+
+            <span class="tracking-help-star">
+                ✦
+            </span>
+
+            <p>
+                Encontrás tu número de pedido en la
+                confirmación de tu compra.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<style>
+
+    /* =========================================================
+       SEGUIMIENTO — NAVY POP
+    ========================================================= */
+
+    .tracking-page {
+        min-height: 72vh;
+
+        padding:
+            90px
+            30px
+            120px;
+
+        display: flex;
+        justify-content: center;
+
+        background: #f6efe3;
+
+        color: #081f33;
+    }
+
+
+    .tracking-shell {
+        width: 100%;
+        max-width: 620px;
+    }
+
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    .tracking-header {
+        margin-bottom: 38px;
+
+        text-align: center;
+    }
+
+
+    .tracking-eyebrow {
+        margin:
+            0
+            0
+            18px;
+
+        color: #d2a62c;
+
+        font-size: 9px;
+        font-weight: 800;
+
+        letter-spacing: 2.4px;
+
+        text-transform: uppercase;
+    }
+
+
+    .tracking-header h1 {
+        margin: 0;
+
+        color: #081f33;
+
+        font-size:
+            clamp(
+                46px,
+                6vw,
+                72px
+            );
+
+        font-weight: 800;
+
+        line-height: .92;
+
+        letter-spacing: -3.5px;
+    }
+
+
+    .tracking-header h1 span {
+        display: inline-block;
+
+        margin-left: 8px;
+
+        color: #d2a62c;
+
+        font-size: .38em;
+
+        vertical-align: top;
+
+        transform:
+            translateY(7px);
+    }
+
+
+    .tracking-description {
+        max-width: 440px;
+
+        margin:
+            25px
+            auto
+            0;
+
+        color: #6f777b;
+
+        font-size: 13px;
+
+        line-height: 1.7;
+    }
+
+
+    /* =========================================================
+       CARD
+    ========================================================= */
+
+    .tracking-card {
+        padding: 34px;
+
+        border:
+            1px solid
+            rgba(8, 31, 51, .10);
+
+        border-radius: 28px;
+
+        background: #fffaf2;
+
+        box-shadow:
+            0
+            20px
+            60px
+            rgba(8, 31, 51, .06);
+    }
+
+
+    /* =========================================================
+       ERROR
+    ========================================================= */
+
+    .tracking-error {
+        margin-bottom: 25px;
+
+        padding:
+            14px
+            16px;
+
+        display: flex;
+        align-items: center;
+
+        gap: 11px;
+
+        border:
+            1px solid
+            rgba(8, 31, 51, .10);
+
+        border-radius: 15px;
+
+        background:
+            rgba(210, 166, 44, .10);
+
+        color: #081f33;
+
+        font-size: 11px;
+
+        line-height: 1.5;
+    }
+
+
+    .tracking-error-icon {
+        width: 24px;
+        height: 24px;
+
+        flex: 0 0 24px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: #d2a62c;
+
+        color: #081f33;
+
+        font-size: 11px;
+        font-weight: 900;
+    }
+
+
+    /* =========================================================
+       FORM
+    ========================================================= */
+
+    .tracking-form {
+        display: flex;
+        flex-direction: column;
+
+        gap: 24px;
+    }
+
+
+    .tracking-field {
+        display: flex;
+        flex-direction: column;
+
+        gap: 9px;
+    }
+
+
+    .tracking-field label {
+        padding-left: 3px;
+
+        color: #081f33;
+
+        font-size: 8px;
+        font-weight: 800;
+
+        letter-spacing: 1.5px;
+
+        text-transform: uppercase;
+    }
+
+
+    .tracking-field input {
+        box-sizing: border-box;
+
+        width: 100%;
+        height: 58px;
+
+        padding:
+            0
+            19px;
+
+        border:
+            1px solid
+            rgba(8, 31, 51, .17);
+
+        border-radius: 17px;
+
+        outline: none;
+
+        background: #f6efe3;
+
+        color: #081f33;
+
+        font-family: inherit;
+
+        font-size: 14px;
+        font-weight: 650;
+
+        transition:
+            border-color .2s ease,
+            box-shadow .2s ease,
+            background .2s ease;
+    }
+
+
+    .tracking-field input::placeholder {
+        color:
+            rgba(8, 31, 51, .38);
+
+        font-weight: 500;
+    }
+
+
+    .tracking-field input:hover {
+        border-color:
+            rgba(8, 31, 51, .38);
+    }
+
+
+    .tracking-field input:focus {
+        border-color: #d2a62c;
+
+        background: #fffaf2;
+
+        box-shadow:
+            0
+            0
+            0
+            3px
+            rgba(210, 166, 44, .10);
+    }
+
+
+    .tracking-field small {
+        padding-left: 3px;
+
+        color: #8a8d8f;
+
+        font-size: 9px;
+
+        line-height: 1.5;
+    }
+
+
+    /* =========================================================
+       NÚMERO PEDIDO
+    ========================================================= */
+
+    .tracking-input {
+        position: relative;
+    }
+
+
+    .tracking-input-prefix {
+        position: absolute;
+
+        top: 50%;
+        left: 19px;
+
+        z-index: 2;
+
+        color: #d2a62c;
+
+        font-size: 15px;
+        font-weight: 900;
+
+        transform:
+            translateY(-50%);
+
+        pointer-events: none;
+    }
+
+
+    .tracking-input input {
+        padding-left: 39px;
+    }
+
+
+    /* SACAR FLECHITAS DEL NUMBER */
+
+    .tracking-input
+    input[type="number"] {
+        appearance: textfield;
+
+        -moz-appearance: textfield;
+    }
+
+
+    .tracking-input
+    input[type="number"]::-webkit-inner-spin-button,
+
+    .tracking-input
+    input[type="number"]::-webkit-outer-spin-button {
+        margin: 0;
+
+        -webkit-appearance: none;
+    }
+
+
+    /* =========================================================
+       BOTÓN
+    ========================================================= */
+
+    .tracking-submit {
+        width: 100%;
+        height: 60px;
+
+        margin-top: 4px;
+
+        padding:
+            0
+            24px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        border: 0;
+
+        border-radius: 100px;
+
+        background: #081f33;
+
+        color: #f6efe3;
+
+        font-family: inherit;
+
+        cursor: pointer;
+
+        transition:
+            background .2s ease,
+            color .2s ease,
+            transform .2s ease,
+            box-shadow .2s ease;
+    }
+
+
+    .tracking-submit > span:first-child {
+        font-size: 9px;
+        font-weight: 800;
+
+        letter-spacing: 1.4px;
+    }
+
+
+    .tracking-submit-arrow {
+        font-size: 18px;
+
+        transition:
+            transform .2s ease;
+    }
+
+
+    .tracking-submit:hover {
+        background: #d2a62c;
+
+        color: #081f33;
+
+        transform:
+            translateY(-2px);
+
+        box-shadow:
+            0
+            10px
+            25px
+            rgba(8, 31, 51, .10);
+    }
+
+
+    .tracking-submit:hover
+    .tracking-submit-arrow {
+        transform:
+            translateX(4px);
+    }
+
+
+    /* =========================================================
+       AYUDA
+    ========================================================= */
+
+    .tracking-help {
+        margin-top: 25px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        color: #7a7e80;
+
+        text-align: center;
+    }
+
+
+    .tracking-help p {
+        margin: 0;
+
+        font-size: 9px;
+
+        line-height: 1.5;
+    }
+
+
+    .tracking-help-star {
+        color: #d2a62c;
+
+        font-size: 10px;
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @@media (max-width: 600px) {
+
+        .tracking-page {
+            min-height: 65vh;
+
+            padding:
+                60px
+                18px
+                85px;
+        }
+
+
+        .tracking-header {
+            margin-bottom: 30px;
+        }
+
+
+        .tracking-header h1 {
+            font-size: 47px;
+
+            letter-spacing: -2.7px;
+        }
+
+
+        .tracking-description {
+            max-width: 340px;
+
+            font-size: 11px;
+        }
+
+
+        .tracking-card {
+            padding:
+                26px
+                20px;
+
+            border-radius: 23px;
+        }
+
+
+        .tracking-field input {
+            height: 55px;
+        }
+
+
+        .tracking-submit {
+            height: 56px;
+        }
+
+    }
+
+</style>

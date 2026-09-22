@@ -1,0 +1,469 @@
+@model List<TiendaNaval.Models.CarritoItem>
+
+@{
+    ViewData["Title"] = "Carrito";
+
+    var total = Model != null
+        ? Model.Sum(x => x.Precio * x.Cantidad)
+        : 0;
+}
+
+<section class="rhode-cart-page">
+
+    <!-- ==========================================
+    ENCABEZADO
+    =========================================== -->
+
+    <div class="rhode-cart-header">
+
+        <div class="rhode-cart-header-left">
+
+            <p class="rhode-cart-eyebrow">
+                VYR / COLECCIÓN NAVAL
+            </p>
+
+            <h1>
+                Tu carrito<span class="rhode-cart-title-dot">.</span>
+            </h1>
+
+            <p class="rhode-cart-header-text">
+                Revisá tus productos antes de finalizar la compra.
+            </p>
+
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="rhode-cart-header-count">
+
+                <span>
+                    @Model.Sum(x => x.Cantidad)
+                </span>
+
+                <small>
+                    @(Model.Sum(x => x.Cantidad) == 1
+                        ? "PRODUCTO"
+                        : "PRODUCTOS")
+                </small>
+
+            </div>
+        }
+
+    </div>
+
+
+    @if (Model != null && Model.Any())
+    {
+
+        <!-- ==========================================
+        CARRITO
+        =========================================== -->
+
+        <div class="rhode-cart-layout">
+
+
+            <!-- ==========================================
+            PRODUCTOS
+            =========================================== -->
+
+            <div class="rhode-cart-items">
+
+                @foreach (var item in Model)
+                {
+                    <article class="rhode-cart-item">
+
+
+                        <!-- IMAGEN -->
+
+                        <div class="rhode-cart-image">
+
+                            @if (!string.IsNullOrWhiteSpace(item.ImagenUrl))
+                            {
+                                <img src="@item.ImagenUrl"
+                                     alt="@item.Nombre" />
+                            }
+                            else
+                            {
+                                <div class="rhode-cart-placeholder">
+                                    VYR
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <!-- INFORMACIÓN -->
+
+                        <div class="rhode-cart-info">
+
+
+                            <div class="rhode-cart-info-top">
+
+                                <div class="rhode-cart-product-data">
+
+                                    <p class="rhode-cart-category">
+                                        VYR / COLECCIÓN NAVAL
+                                    </p>
+
+                                    <h2>
+                                        @item.Nombre
+                                    </h2>
+
+                                    <p class="rhode-cart-unit-price">
+                                        $@item.Precio.ToString("N0")
+                                    </p>
+
+
+                                    <!-- OPCIONES DEL PRODUCTO -->
+
+                                    @if (
+                                        !string.IsNullOrWhiteSpace(item.Color) ||
+                                        !string.IsNullOrWhiteSpace(item.Especialidad) ||
+                                        !string.IsNullOrWhiteSpace(item.Jerarquia) ||
+                                        !string.IsNullOrWhiteSpace(item.JerarquiaAspirantes) ||
+                                        !string.IsNullOrWhiteSpace(item.ConGanchito) ||
+                                        !string.IsNullOrWhiteSpace(item.ConNombre) ||
+                                        !string.IsNullOrWhiteSpace(item.NombreApellido) ||
+                                        !string.IsNullOrWhiteSpace(item.Inicial) ||
+                                        !string.IsNullOrWhiteSpace(item.Apellido) ||
+                                        !string.IsNullOrWhiteSpace(item.NombrePersonalizado)
+                                    )
+                                    {
+                                        <div class="rhode-cart-options">
+
+                                            @if (!string.IsNullOrWhiteSpace(item.Color))
+                                            {
+                                                <span>
+                                                    COLOR · @item.Color
+                                                </span>
+                                            }
+
+                                            @if (!string.IsNullOrWhiteSpace(item.Especialidad))
+                                            {
+                                                <span>
+                                                    ESPECIALIDAD · @item.Especialidad
+                                                </span>
+                                            }
+
+                                            @if (!string.IsNullOrWhiteSpace(item.Jerarquia))
+                                            {
+                                                <span>
+                                                    JERARQUÍA · @item.Jerarquia
+                                                </span>
+                                            }
+
+                                            @if (!string.IsNullOrWhiteSpace(item.JerarquiaAspirantes))
+                                            {
+                                                <span>
+                                                    ASPIRANTE · @item.JerarquiaAspirantes
+                                                </span>
+                                            }
+
+                                            @if (!string.IsNullOrWhiteSpace(item.ConGanchito))
+                                            {
+                                                <span>
+                                                    GANCHO · @item.ConGanchito
+                                                </span>
+                                            }
+
+                                            @if (!string.IsNullOrWhiteSpace(item.ConNombre))
+                                            {
+                                                <span>
+                                                    CON NOMBRE · @item.ConNombre
+                                                </span>
+                                            }
+
+                                            @if (!string.IsNullOrWhiteSpace(item.NombreApellido))
+                                            {
+                                                <span>
+                                                    NOMBRE · @item.NombreApellido
+                                                </span>
+                                            }
+
+                                            @if (!string.IsNullOrWhiteSpace(item.Inicial))
+                                            {
+                                                <span>
+                                                    INICIAL · @item.Inicial
+                                                </span>
+                                            }
+
+                                            @if (!string.IsNullOrWhiteSpace(item.Apellido))
+                                            {
+                                                <span>
+                                                    APELLIDO · @item.Apellido
+                                                </span>
+                                            }
+
+                                            @if (!string.IsNullOrWhiteSpace(item.NombrePersonalizado))
+                                            {
+                                                <span>
+                                                    PERSONALIZADO · @item.NombrePersonalizado
+                                                </span>
+                                            }
+
+                                        </div>
+                                    }
+
+                                </div>
+
+
+                                <!-- ELIMINAR -->
+
+                                <form asp-controller="Carrito"
+                                      asp-action="Eliminar"
+                                      method="post">
+
+                                    <input type="hidden"
+                                           name="productoId"
+                                           value="@item.ProductoId" />
+
+                                    <button type="submit"
+                                            class="rhode-cart-remove">
+
+                                        ELIMINAR
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+
+                            <!-- CANTIDAD + SUBTOTAL -->
+
+                            <div class="rhode-cart-bottom">
+
+                                <form asp-controller="Carrito"
+                                      asp-action="Actualizar"
+                                      method="post"
+                                      class="rhode-cart-quantity">
+
+                                    <input type="hidden"
+                                           name="productoId"
+                                           value="@item.ProductoId" />
+
+
+                                    <label>
+                                        CANTIDAD
+                                    </label>
+
+
+                                    <div class="rhode-cart-select-wrapper">
+
+                                        <select name="cantidad"
+                                                onchange="this.form.submit()">
+
+                                            @for (var i = 1; i <= 10; i++)
+                                            {
+                                                if (i == item.Cantidad)
+                                                {
+                                                    <option value="@i"
+                                                            selected>
+                                                        @i
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@i">
+                                                        @i
+                                                    </option>
+                                                }
+                                            }
+
+                                        </select>
+
+                                    </div>
+
+                                </form>
+
+
+                                <div class="rhode-cart-item-total">
+
+                                    <span>
+                                        SUBTOTAL
+                                    </span>
+
+                                    <strong>
+                                        $@((item.Precio * item.Cantidad).ToString("N0"))
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+                }
+
+            </div>
+
+
+            <!-- ==========================================
+            RESUMEN
+            =========================================== -->
+
+            <aside class="rhode-cart-summary">
+
+                <div class="rhode-summary-top">
+
+                    <p class="rhode-cart-eyebrow">
+                        RESUMEN
+                    </p>
+
+                    <h2>
+                        Tu pedido<span>.</span>
+                    </h2>
+
+                </div>
+
+
+                <div class="rhode-summary-content">
+
+
+                    <div class="rhode-summary-line">
+
+                        <span>
+                            Productos
+                        </span>
+
+                        <span>
+                            @Model.Sum(x => x.Cantidad)
+                        </span>
+
+                    </div>
+
+
+                    <div class="rhode-summary-line">
+
+                        <span>
+                            Subtotal
+                        </span>
+
+                        <span>
+                            $@total.ToString("N0")
+                        </span>
+
+                    </div>
+
+
+                    <div class="rhode-summary-line">
+
+                        <span>
+                            Forma de pago
+                        </span>
+
+                        <span>
+                            Transferencia
+                        </span>
+
+                    </div>
+
+
+                    <div class="rhode-summary-divider"></div>
+
+
+                    <div class="rhode-summary-total">
+
+                        <span>
+                            TOTAL
+                        </span>
+
+                        <strong>
+                            $@total.ToString("N0")
+                        </strong>
+
+                    </div>
+
+
+                    <a asp-controller="Checkout"
+                       asp-action="Index"
+                       class="rhode-checkout-button">
+
+                        <span>
+                            FINALIZAR COMPRA
+                        </span>
+
+                        <span class="rhode-checkout-arrow">
+                            →
+                        </span>
+
+                    </a>
+
+
+                    <div class="rhode-summary-payment">
+
+                        <span class="rhode-summary-payment-dot"></span>
+
+                        <p>
+                            Pago mediante transferencia bancaria.
+                        </p>
+
+                    </div>
+
+
+                    <p class="rhode-summary-note">
+                        Al finalizar vas a poder completar tus datos,
+                        seleccionar el método de envío y confirmar
+                        tu pedido.
+                    </p>
+
+
+                    <a asp-controller="Productos"
+                       asp-action="Index"
+                       class="rhode-continue-shopping">
+
+                        ← SEGUIR COMPRANDO
+
+                    </a>
+
+                </div>
+
+            </aside>
+
+        </div>
+    }
+    else
+    {
+
+        <!-- ==========================================
+        CARRITO VACÍO
+        =========================================== -->
+
+        <div class="rhode-cart-empty">
+
+            <div class="rhode-cart-empty-icon">
+                VYR
+            </div>
+
+            <p class="rhode-cart-eyebrow">
+                TU CARRITO
+            </p>
+
+            <h2>
+                Todavía está vacío<span>.</span>
+            </h2>
+
+            <p class="rhode-cart-empty-text">
+                Descubrí nuestra colección y agregá
+                tus productos favoritos.
+            </p>
+
+            <a asp-controller="Productos"
+               asp-action="Index"
+               class="rhode-empty-button">
+
+                <span>
+                    VER LA COLECCIÓN
+                </span>
+
+                <span>
+                    →
+                </span>
+
+            </a>
+
+        </div>
+    }
+
+</section>
