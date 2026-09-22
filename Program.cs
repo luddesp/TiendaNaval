@@ -12,8 +12,9 @@ app.MapControllerRoute(name:"default", pattern:"{controller=Home}/{action=Index}
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<TiendaNaval.Data.AppDbContext>();
-
+    db.Database.Migrate();
     if (!db.Administradores.Any())
+    
     {
         db.Administradores.Add(new TiendaNaval.Models.Administrador
         {
